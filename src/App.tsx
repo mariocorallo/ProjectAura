@@ -1,36 +1,101 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { doc, getDoc, setDoc, collection, onSnapshot, query, serverTimestamp } from 'firebase/firestore';
+import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, User } from 'firebase/auth';
+import { db, auth } from './lib/firebase';
 import { EXERCISES } from './constants';
-import { Exercise, UserHistory, SortOption } from './types';
+import { Exercise, UserHistory } from './types';
 import { ExerciseCard } from './components/ExerciseCard';
 import { ExerciseDetail } from './components/ExerciseDetail';
-import { Sparkles, History as HistoryIcon, Lightbulb, SortAsc } from 'lucide-react';
+import { ScrollToTop } from './components/ScrollToTop';
+import { SuggestionsDrawer } from './components/SuggestionsDrawer';
+import { Sparkles, History as HistoryIcon, Lightbulb, Search, X, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 
 export default function App() {
   const [view, setView] = useState<'dashboard' | 'about' | 'bio' | 'tips'>('dashboard');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [activeCategory, setActiveCategory] = useState<Exercise['category'] | 'tutti'>('tutti');
   const [history, setHistory] = useState<UserHistory[]>([]);
-  const [sortBy, setSortBy] = useState<SortOption>('default');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
+  // Auth Listener
   useEffect(() => {
-    const saved = localStorage.getItem('aura-history');
-    if (saved) setHistory(JSON.parse(saved));
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+      
+      if (currentUser) {
+        // Sync Profile
+        const userRef = doc(db, 'users', currentUser.uid);
+        const profile = await getDoc(userRef);
+        if (!profile.exists()) {
+          await setDoc(userRef, {
+            uid: currentUser.uid,
+            email: currentUser.email,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+            createdAt: serverTimestamp()
+          });
+        }
+
+        // Real-time History sync
+        const historyRef = collection(db, 'users', currentUser.uid, 'history');
+        const q = query(historyRef);
+        const unsubHistory = onSnapshot(q, (snapshot) => {
+          const cloudHistory = snapshot.docs.map(doc => doc.data() as UserHistory);
+          setHistory(cloudHistory);
+        });
+        return () => unsubHistory();
+      } else {
+        // Fallback to local storage if not logged in
+        const saved = localStorage.getItem('aura-history');
+        if (saved) setHistory(JSON.parse(saved));
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const updateHistory = (id: string, completed = false) => {
-    setHistory(prev => {
-      const existing = prev.find(h => h.exerciseId === id);
-      const updated = existing 
-        ? prev.map(h => h.exerciseId === id 
-            ? { ...h, lastAccessed: Date.now(), completedCount: h.completedCount + (completed ? 1 : 0) } 
-            : h)
-        : [...prev, { exerciseId: id as any, lastAccessed: Date.now(), completedCount: completed ? 1 : 0 }];
+  const handleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Login failed", error);
+    }
+  };
+
+  const handleLogout = () => signOut(auth);
+
+  const updateHistory = async (id: string, completed = false) => {
+    if (user) {
+      const historyRef = doc(db, 'users', user.uid, 'history', id);
+      const existingDoc = await getDoc(historyRef);
+      const data = existingDoc.exists() ? existingDoc.data() : { completedCount: 0 };
       
-      const limited = updated.sort((a, b) => b.lastAccessed - a.lastAccessed).slice(0, 50);
-      localStorage.setItem('aura-history', JSON.stringify(limited));
-      return limited;
-    });
+      await setDoc(historyRef, {
+        exerciseId: id,
+        lastAccessed: Date.now(),
+        completedCount: data.completedCount + (completed ? 1 : 0)
+      }, { merge: true });
+    } else {
+      // Offline fallback
+      setHistory(prev => {
+        const existing = prev.find(h => h.exerciseId === id);
+        const updated = existing 
+          ? prev.map(h => h.exerciseId === id 
+              ? { ...h, lastAccessed: Date.now(), completedCount: h.completedCount + (completed ? 1 : 0) } 
+              : h)
+          : [...prev, { exerciseId: id as any, lastAccessed: Date.now(), completedCount: completed ? 1 : 0 }];
+        
+        const limited = updated.sort((a, b) => b.lastAccessed - a.lastAccessed).slice(0, 50);
+        localStorage.setItem('aura-history', JSON.stringify(limited));
+        return limited;
+      });
+    }
   };
 
   useEffect(() => {
@@ -51,24 +116,17 @@ export default function App() {
     .sort(() => Math.random() - 0.5)
     .slice(0, 3);
 
-  const filteredExercises = activeCategory === 'tutti' 
-    ? EXERCISES 
-    : EXERCISES.filter(e => e.category === activeCategory);
-
-  const sortedExercises = [...filteredExercises].sort((a, b) => {
-    if (sortBy === 'alphabetical') {
-      return a.title.localeCompare(b.title);
-    }
-    if (sortBy === 'duration') {
-      return (a.timerSeconds || 0) - (b.timerSeconds || 0);
-    }
-    return 0; // default (original order)
-  });
+  const filteredExercises = EXERCISES
+    .filter(e => activeCategory === 'tutti' || e.category === activeCategory)
+    .filter(e => 
+      e.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      e.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const categories: { id: typeof activeCategory; label: string }[] = [
     { id: 'tutti', label: 'Tutti' },
     { id: 'consapevolezza', label: 'Consapevolezza' },
-    { id: 'nutrimento', label: 'Rito del Nutrimento' },
+    { id: 'a pranzo', label: 'A Pranzo' },
     { id: 'creatività', label: 'Creatività' },
     { id: 'osservazione', label: 'Osservazione' },
     { id: 'ufficio', label: 'In Ufficio' },
@@ -96,7 +154,8 @@ export default function App() {
             className="max-w-7xl mx-auto px-6 py-12 md:py-16"
           >
             {/* Minimal Navigation */}
-            <nav className="flex justify-center mb-16">
+            <nav className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
+              <div className="flex-1 hidden md:block" />
               <div className="flex items-center p-1 bg-white/40 border border-white rounded-[24px] backdrop-blur-sm shadow-sm transition-all hover:bg-white/60">
                 {menuItems.map((item) => (
                   <button
@@ -112,6 +171,38 @@ export default function App() {
                   </button>
                 ))}
               </div>
+              <div className="flex-1 flex justify-end">
+                {authLoading ? (
+                  <div className="w-8 h-8 rounded-full bg-white/20 animate-pulse" />
+                ) : user ? (
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={handleLogout}
+                      className="text-[10px] font-bold uppercase tracking-widest text-aura-muted hover:text-aura-accent transition-colors flex items-center gap-2"
+                    >
+                      <LogOut size={14} />
+                      <span className="hidden sm:inline">Esci</span>
+                    </button>
+                    <div className="w-8 h-8 rounded-full border border-white overflow-hidden shadow-sm">
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt={user.displayName || 'Utente'} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="w-full h-full bg-aura-accent/10 flex items-center justify-center text-aura-accent">
+                          <UserIcon size={16} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={handleLogin}
+                    className="flex items-center gap-2 px-5 py-2 bg-white text-aura-ink rounded-full text-[10px] font-bold uppercase tracking-[0.2em] border border-white shadow-sm hover:shadow-md transition-all active:scale-95"
+                  >
+                    <LogIn size={14} className="text-aura-accent" />
+                    <span>Accedi</span>
+                  </button>
+                )}
+              </div>
             </nav>
 
             <AnimatePresence mode="wait">
@@ -123,71 +214,75 @@ export default function App() {
                   exit={{ opacity: 0, y: -10 }}
                 >
                   {/* Header */}
-                  <header className="mb-20 text-center max-w-2xl mx-auto">
-                    <h1 className="serif text-5xl md:text-7xl font-bold mb-8 italic tracking-tight">
-                      Aura
-                    </h1>
-                    <p className="text-lg md:text-xl text-aura-muted leading-relaxed font-light font-serif italic">
-                      "Il distacco non è mancanza di interesse, ma la capacità di non farsi dominare dall'impulso."
-                    </p>
+                  <header 
+                    className={`transition-all duration-700 ease-in-out text-center max-w-2xl mx-auto ${
+                      searchQuery ? 'mb-6 scale-90 opacity-40' : 'mb-20'
+                    }`}
+                  >
+                    <AnimatePresence mode="wait">
+                      {!searchQuery ? (
+                        <motion.div
+                          key="full-header"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          <h1 className="serif text-5xl md:text-7xl font-bold mb-8 italic tracking-tight">
+                            Aura
+                          </h1>
+                          <p className="text-sm md:text-base text-aura-muted leading-relaxed font-light font-serif italic mb-10 px-4 max-w-lg mx-auto whitespace-pre-line">
+                            Ti aiuto a disinnescare il pilota automatico.{"\n"}
+                            Aura è un insieme di piccoli esercizi quotidiani per spezzare la compulsione digitale e riprendere il comando della tua attenzione.
+                          </p>
+                          <button 
+                            onClick={() => setIsDrawerOpen(true)}
+                            className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
+                          >
+                            <Sparkles size={16} className="text-aura-accent group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-aura-muted group-hover:text-aura-accent">Scopri Consigli & Storia</span>
+                          </button>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="compact-header"
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="pt-4"
+                        >
+                          <h1 className="serif text-3xl font-bold italic tracking-tight">
+                            Aura
+                          </h1>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </header>
 
-                  {/* Personalized Sections */}
-                  {history.length > 0 && activeCategory === 'tutti' && (
-                    <div className="grid md:grid-cols-2 gap-12 mb-20">
-                      {/* Highlights: Recent */}
-                      <section>
-                        <div className="flex items-center space-x-2 text-aura-muted mb-6">
-                          <HistoryIcon size={16} />
-                          <h2 className="text-xs uppercase tracking-[0.2em] font-bold">Ultimi Praticati</h2>
-                        </div>
-                        <div className="grid grid-cols-1 gap-4">
-                          {recentExercises.map(ex => (
-                            <button 
-                              key={`recent-${ex.id}`}
-                              onClick={() => setSelectedExercise(ex)}
-                              className="flex items-center p-4 bg-white/40 border border-white rounded-2xl hover:bg-white transition-all text-left group"
-                            >
-                              <div className="w-10 h-10 rounded-xl bg-aura-accent/10 text-aura-accent flex items-center justify-center mr-4 group-hover:bg-aura-accent group-hover:text-white transition-colors">
-                                <Sparkles size={18} />
-                              </div>
-                              <div>
-                                <h4 className="font-bold text-sm text-aura-ink leading-tight">{ex.title}</h4>
-                                <span className="text-[10px] text-aura-muted uppercase tracking-wider">{ex.category}</span>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </section>
-
-                      {/* Highlights: Recommended */}
-                      <section>
-                        <div className="flex items-center space-x-2 text-aura-muted mb-6">
-                          <Lightbulb size={16} />
-                          <h2 className="text-xs uppercase tracking-[0.2em] font-bold">Consigliati per te</h2>
-                        </div>
-                        <div className="grid grid-cols-1 gap-4">
-                          {recommendedExercises.map(ex => (
-                            <button 
-                              key={`rec-${ex.id}`}
-                              onClick={() => setSelectedExercise(ex)}
-                              className="flex items-center p-4 bg-aura-accent/5 border border-aura-accent/10 rounded-2xl hover:bg-aura-accent/10 transition-all text-left group"
-                            >
-                              <div className="w-10 h-10 rounded-xl bg-white text-aura-accent flex items-center justify-center mr-4 shadow-sm">
-                                <Sparkles size={18} />
-                              </div>
-                              <div>
-                                <h4 className="font-bold text-sm text-aura-ink leading-tight">{ex.title}</h4>
-                                <p className="text-[10px] text-aura-muted line-clamp-1">Nuova prospettiva: {ex.objective.slice(0, 40)}...</p>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </section>
+                  {/* Search Bar */}
+                  <div className="max-w-2xl mx-auto w-full mb-12">
+                    <div className="relative group">
+                      <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                        <Search size={18} className="text-aura-muted group-focus-within:text-aura-accent transition-colors" />
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Cerca un esercizio per titolo o descrizione..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-14 pr-14 py-5 bg-white/40 border-2 border-white rounded-[32px] backdrop-blur-md text-aura-ink placeholder:text-aura-muted/50 focus:outline-none focus:border-aura-accent/30 focus:bg-white/60 transition-all shadow-xl shadow-aura-accent/5"
+                      />
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery('')}
+                          className="absolute inset-y-0 right-0 pr-6 flex items-center text-aura-muted hover:text-aura-accent transition-colors"
+                        >
+                          <X size={18} />
+                        </button>
+                      )}
                     </div>
-                  )}
+                  </div>
 
-                  {/* Filters & Sorting */}
+                  {/* Filters */}
                   <div className="flex flex-col items-center justify-center gap-6 mb-12">
                     <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl">
                       {categories.map((cat) => (
@@ -204,45 +299,53 @@ export default function App() {
                         </button>
                       ))}
                     </div>
-
-                    {/* Sorting Dropdown */}
-                    <div className="flex items-center space-x-3 px-6 py-2 bg-white/30 border border-white rounded-2xl backdrop-blur-md">
-                      <SortAsc size={14} className="text-aura-muted" />
-                      <select 
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value as SortOption)}
-                        className="bg-transparent text-[10px] font-bold text-aura-muted hover:text-aura-accent outline-none cursor-pointer uppercase tracking-[0.15em]"
-                      >
-                        <option value="default">Ordine Consigliato</option>
-                        <option value="alphabetical">Alfabetico (A-Z)</option>
-                        <option value="duration">Durata (Min-Max)</option>
-                      </select>
-                    </div>
                   </div>
 
                   {/* Grid */}
-                  <motion.div 
-                    layout
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                  >
-                    <AnimatePresence mode="popLayout">
-                      {sortedExercises.map((exercise, i) => (
-                        <motion.div
-                          key={exercise.id}
-                          layout
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          transition={{ delay: i * 0.02 }}
-                        >
-                          <ExerciseCard 
-                            exercise={exercise} 
-                            onClick={() => setSelectedExercise(exercise)} 
-                          />
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </motion.div>
+                  {filteredExercises.length > 0 ? (
+                    <motion.div 
+                      layout
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    >
+                      <AnimatePresence mode="popLayout">
+                        {filteredExercises.map((exercise, i) => (
+                          <motion.div
+                            key={exercise.id}
+                            layout
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ delay: i * 0.02 }}
+                          >
+                            <ExerciseCard 
+                              exercise={exercise} 
+                              onClick={() => setSelectedExercise(exercise)} 
+                            />
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center py-20 px-6 bg-white/20 border-2 border-dashed border-white/40 rounded-[48px] backdrop-blur-sm"
+                    >
+                      <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-6 text-aura-muted">
+                        <Search size={32} />
+                      </div>
+                      <h3 className="serif text-2xl font-bold italic mb-2">Nessun esercizio trovato</h3>
+                      <p className="text-aura-muted max-w-md mx-auto">
+                        Non abbiamo trovato esercizi che corrispondano alla tua ricerca "{searchQuery}" nella categoria selezionata.
+                      </p>
+                      <button 
+                        onClick={() => { setSearchQuery(''); setActiveCategory('tutti'); }}
+                        className="mt-8 text-xs font-bold uppercase tracking-widest text-aura-accent hover:underline"
+                      >
+                        Resetta tutti i filtri
+                      </button>
+                    </motion.div>
+                  )}
                 </motion.div>
               ) : view === 'about' ? (
                 <motion.div
@@ -358,6 +461,14 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      <ScrollToTop />
+      <SuggestionsDrawer 
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        recentExercises={recentExercises}
+        recommendedExercises={recommendedExercises}
+        onSelectExercise={setSelectedExercise}
+      />
     </div>
   );
 }
