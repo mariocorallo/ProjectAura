@@ -54,6 +54,7 @@ export type ExerciseId =
   | 'rituale-email'
   | 'udito-selettivo-pc'
   | 'micro-movimento-call'
+  | 'pausa-caffe-single'
   | 'defocalizzazione-visiva'
   | 'mappatura-click'
   | 'distacco-task'
@@ -73,7 +74,7 @@ export interface Exercise {
   objective: string;
   instructions: string[];
   icon: string;
-  category: 'consapevolezza' | 'creatività' | 'osservazione' | 'a pranzo' | 'ufficio' | 'spesa' | 'palestra' | 'auto';
+  category: 'consapevolezza' | 'creatività' | 'osservazione' | 'nutrimento' | 'ufficio' | 'spesa' | 'palestra' | 'auto';
   timerSeconds?: number;
 }
 
@@ -90,3 +91,5 @@ export interface UserHistory {
   lastAccessed: number;
   completedCount: number;
 }
+
+export type SortOption = 'default' | 'alphabetical' | 'duration';

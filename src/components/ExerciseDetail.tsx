@@ -142,7 +142,7 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
                 </div>
                 <h3 className="serif text-2xl font-bold italic">Pronto per iniziare?</h3>
                 <p className="text-aura-muted text-sm leading-relaxed">
-                  L'essenza di questo esercizio risiede nella tua presenza. Segui le istruzioni che hai appena letto e osserva ciò che accade dentro di te.
+                  L'essenza di questo esercizio risiede nella tua presenza. Segui le istruzioni e osserva ciò che accade dentro di te.
                 </p>
                 <button 
                   className="w-full py-4 bg-aura-accent text-white rounded-2xl font-bold shadow-lg shadow-aura-accent/20 hover:bg-aura-accent/90 transition-all flex items-center justify-center space-x-2"
@@ -158,64 +158,34 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-full flex flex-col items-center justify-between py-12 px-6 min-h-[500px] relative overflow-hidden"
+                className="w-full h-full flex flex-col items-center justify-center space-y-8"
               >
-                {/* Atmospheric Background Layer */}
-                <div className="absolute inset-0 -z-10 pointer-events-none">
-                  <motion.div 
-                    animate={{ 
-                      scale: [1, 1.2, 1],
-                      rotate: [0, 45, 0],
-                      opacity: [0.1, 0.2, 0.1]
-                    }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-aura-accent blur-[80px] rounded-full"
-                  />
-                </div>
-
-                <div className="text-center space-y-2">
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-aura-muted opacity-50">
-                    Pratica in corso
-                  </span>
-                  <h3 className="serif text-xl italic text-aura-ink/60">{exercise.title}</h3>
-                </div>
-
-                {/* Breathing Guide / Presence Indicator */}
-                <div className="flex flex-col items-center justify-center relative">
-                  <motion.div 
-                    animate={{ 
-                      scale: [1, 1.5, 1],
-                      opacity: [0.3, 0.6, 0.3]
-                    }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-32 h-32 rounded-full border border-aura-accent/30 flex items-center justify-center"
-                  >
-                    <div className="w-16 h-16 rounded-full bg-aura-accent/20 blur-md" />
-                  </motion.div>
-                  <motion.p 
-                    animate={{ opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="mt-12 text-sm italic serif text-aura-muted"
-                  >
-                    Resta nel flusso...
-                  </motion.p>
-                </div>
-
-                <div className="w-full space-y-6">
-                  {exercise.id === 'mappatura-automatismi' && (
-                    <div className="w-full bg-white/40 p-1 rounded-3xl border border-white">
-                      <Journal exerciseId={exercise.id} />
+                {exercise.timerSeconds ? (
+                  <div className="flex flex-col items-center space-y-8">
+                    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-aura-muted">Sessione in corso</h3>
+                    <Timer seconds={exercise.timerSeconds} onComplete={endSession} />
+                  </div>
+                ) : (
+                  <div className="w-full flex flex-col items-center space-y-8">
+                    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-aura-muted">Esercizio Attivo</h3>
+                    
+                    {exercise.id === 'mappatura-automatismi' && <Journal exerciseId={exercise.id} />}
+                    
+                    <div className="bg-aura-accent/5 p-12 rounded-[40px] border border-aura-accent/10 max-w-sm text-center">
+                      <p className="serif text-xl text-aura-ink/60 italic leading-relaxed">
+                        "Porta la tua attenzione al momento presente. Osserva senza giudizio ciò che accade fuori e dentro di te."
+                      </p>
                     </div>
-                  )}
 
-                  <button 
-                    className="w-full py-4 bg-white text-aura-ink rounded-2xl font-bold border border-white hover:border-aura-accent/20 transition-all flex items-center justify-center space-x-2 shadow-sm"
-                    onClick={endSession}
-                  >
-                    <CircleStop size={18} className="text-aura-accent" />
-                    <span>Ho completato la pratica</span>
-                  </button>
-                </div>
+                    <button 
+                      className="px-8 py-3 bg-white text-aura-ink rounded-xl font-bold border border-aura-muted/10 hover:border-aura-accent transition-all flex items-center space-x-2 shadow-sm"
+                      onClick={endSession}
+                    >
+                      <CircleStop size={18} className="text-red-500" />
+                      <span>Termina Esercizio</span>
+                    </button>
+                  </div>
+                )}
               </motion.div>
             ) : (
               <motion.div 
