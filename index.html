@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aura: Esercizi di Distaccamento</title>
     <meta name="theme-color" content="#7C9082" />
-    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="https://picsum.photos/seed/aura-icon/32/32" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Kill legacy service workers
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js');
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
         });
       }
     </script>

@@ -32,6 +32,14 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [activeCategory, setActiveCategory] = useState('tutti');
 
   useEffect(() => {
+    // 0. Gestione errori di caricamento moduli (Anti-schermata bianca)
+    const handleError = (e: ErrorEvent) => {
+      if (e.message.includes('Loading chunk') || e.message.includes('Script error')) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener('error', handleError);
+
     // 1. Controllo Versione e Pulizia "Casino" precedente
     const savedVersion = localStorage.getItem('aura-version');
     if (savedVersion !== APP_VERSION) {
