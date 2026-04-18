@@ -1,47 +1,31 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { EXERCISES } from './constants';
-import { Exercise, UserHistory } from './types';
-import { ExerciseCard } from './components/ExerciseCard';
+import { AnimatePresence } from 'motion/react';
+import { AuraProvider, useAura } from './context/AuraContext';
+import { Dashboard } from './pages/Dashboard';
+import { About } from './pages/About';
+import { Bio } from './pages/Bio';
+import { Tips } from './pages/Tips';
 import { ExerciseDetail } from './components/ExerciseDetail';
+import { Navbar } from './components/layout/Navbar';
+import { Footer } from './components/layout/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
 import { SuggestionsDrawer } from './components/SuggestionsDrawer';
-import { Sparkles, History as HistoryIcon, Lightbulb, Search, X } from 'lucide-react';
+import { EXERCISES } from './constants';
+import { Exercise } from './types';
 
-export default function App() {
-  const [view, setView] = useState<'dashboard' | 'about' | 'bio' | 'tips'>('dashboard');
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [activeCategory, setActiveCategory] = useState<Exercise['category'] | 'tutti'>('tutti');
-  const [history, setHistory] = useState<UserHistory[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+function AppContent() {
+  const { 
+    currentView, 
+    selectedExercise, 
+    selectExercise, 
+    history, 
+    completeExercise 
+  } = useAura();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('aura-history');
-    if (saved) setHistory(JSON.parse(saved));
-  }, []);
-
-  const updateHistory = (id: string, completed = false) => {
-    setHistory(prev => {
-      const existing = prev.find(h => h.exerciseId === id);
-      const updated = existing 
-        ? prev.map(h => h.exerciseId === id 
-            ? { ...h, lastAccessed: Date.now(), completedCount: h.completedCount + (completed ? 1 : 0) } 
-            : h)
-        : [...prev, { exerciseId: id as any, lastAccessed: Date.now(), completedCount: completed ? 1 : 0 }];
-      
-      const limited = updated.sort((a, b) => b.lastAccessed - a.lastAccessed).slice(0, 50);
-      localStorage.setItem('aura-history', JSON.stringify(limited));
-      return limited;
-    });
-  };
-
-  useEffect(() => {
     window.scrollTo(0, 0);
-    if (selectedExercise) {
-      updateHistory(selectedExercise.id);
-    }
-  }, [selectedExercise, activeCategory, view]);
+  }, [currentView, selectedExercise]);
 
   const recentExercises = history
     .sort((a, b) => b.lastAccessed - a.lastAccessed)
@@ -54,326 +38,49 @@ export default function App() {
     .sort(() => Math.random() - 0.5)
     .slice(0, 3);
 
-  const filteredExercises = EXERCISES
-    .filter(e => activeCategory === 'tutti' || e.category === activeCategory)
-    .filter(e => 
-      e.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      e.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-  const categories: { id: typeof activeCategory; label: string }[] = [
-    { id: 'tutti', label: 'Tutti' },
-    { id: 'consapevolezza', label: 'Consapevolezza' },
-    { id: 'a pranzo', label: 'A Pranzo' },
-    { id: 'creatività', label: 'Creatività' },
-    { id: 'osservazione', label: 'Osservazione' },
-    { id: 'ufficio', label: 'In Ufficio' },
-    { id: 'spesa', label: 'Al Super' },
-    { id: 'palestra', label: 'In Palestra' },
-    { id: 'auto', label: 'In Auto' },
-  ];
-
-  const menuItems = [
-    { id: 'dashboard', label: 'Esercizi' },
-    { id: 'about', label: "Cos'è Aura" },
-    { id: 'bio', label: 'Chi sono' },
-    { id: 'tips', label: 'Consigli' },
-  ] as const;
-
   return (
     <div className="min-h-screen bg-aura-bg selection:bg-aura-accent/20">
       <AnimatePresence mode="wait">
         {!selectedExercise ? (
-          <motion.main
-            key="dashboard"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="max-w-7xl mx-auto px-6 py-12 md:py-16"
-          >
-            {/* Minimal Navigation */}
-            <nav className="flex justify-center mb-16">
-              <div className="flex items-center p-1 bg-white/40 border border-white rounded-[24px] backdrop-blur-sm shadow-sm transition-all hover:bg-white/60">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setView(item.id)}
-                    className={`px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all ${
-                      view === item.id 
-                        ? 'bg-aura-accent text-white shadow-md shadow-aura-accent/10' 
-                        : 'text-aura-muted hover:text-aura-accent'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </nav>
-
+          <div key="main-shell" className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+            <Navbar />
+            
             <AnimatePresence mode="wait">
-              {view === 'dashboard' ? (
-                <motion.div
-                  key="view-exercises"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                >
-                  {/* Header */}
-                  <header 
-                    className={`transition-all duration-700 ease-in-out text-center max-w-2xl mx-auto ${
-                      searchQuery ? 'mb-6 scale-90 opacity-40' : 'mb-20'
-                    }`}
-                  >
-                    <AnimatePresence mode="wait">
-                      {!searchQuery ? (
-                        <motion.div
-                          key="full-header"
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.4 }}
-                        >
-                          <h1 className="serif text-5xl md:text-7xl font-bold mb-8 italic tracking-tight">
-                            Aura
-                          </h1>
-                          <p className="text-sm md:text-base text-aura-muted leading-relaxed font-light font-serif italic mb-10 px-4 max-w-lg mx-auto whitespace-pre-line">
-                            Ti aiuto a disinnescare il pilota automatico.{"\n"}
-                            Aura è un insieme di piccoli esercizi quotidiani per spezzare la compulsione digitale e riprendere il comando della tua attenzione.
-                          </p>
-                          <button 
-                            onClick={() => setIsDrawerOpen(true)}
-                            className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
-                          >
-                            <Sparkles size={16} className="text-aura-accent group-hover:scale-110 transition-transform" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-aura-muted group-hover:text-aura-accent">Scopri Consigli & Storia</span>
-                          </button>
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          key="compact-header"
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="pt-4"
-                        >
-                          <h1 className="serif text-3xl font-bold italic tracking-tight">
-                            Aura
-                          </h1>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </header>
-
-                  {/* Search Bar */}
-                  <div className="max-w-2xl mx-auto w-full mb-12">
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-                        <Search size={18} className="text-aura-muted group-focus-within:text-aura-accent transition-colors" />
-                      </div>
-                      <input
-                        type="text"
-                        placeholder="Cerca un esercizio per titolo o descrizione..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-14 pr-14 py-5 bg-white/40 border-2 border-white rounded-[32px] backdrop-blur-md text-aura-ink placeholder:text-aura-muted/50 focus:outline-none focus:border-aura-accent/30 focus:bg-white/60 transition-all shadow-xl shadow-aura-accent/5"
-                      />
-                      {searchQuery && (
-                        <button
-                          onClick={() => setSearchQuery('')}
-                          className="absolute inset-y-0 right-0 pr-6 flex items-center text-aura-muted hover:text-aura-accent transition-colors"
-                        >
-                          <X size={18} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Filters */}
-                  <div className="flex flex-col items-center justify-center gap-6 mb-12">
-                    <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl">
-                      {categories.map((cat) => (
-                        <button
-                          key={cat.id}
-                          onClick={() => setActiveCategory(cat.id)}
-                          className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
-                            activeCategory === cat.id
-                              ? 'bg-aura-accent text-white border-aura-accent shadow-lg shadow-aura-accent/20'
-                              : 'bg-white/40 text-aura-muted hover:bg-white hover:text-aura-accent border-white'
-                          }`}
-                        >
-                          {cat.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Grid */}
-                  {filteredExercises.length > 0 ? (
-                    <motion.div 
-                      layout
-                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                    >
-                      <AnimatePresence mode="popLayout">
-                        {filteredExercises.map((exercise, i) => (
-                          <motion.div
-                            key={exercise.id}
-                            layout
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ delay: i * 0.02 }}
-                          >
-                            <ExerciseCard 
-                              exercise={exercise} 
-                              onClick={() => setSelectedExercise(exercise)} 
-                            />
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </motion.div>
-                  ) : (
-                    <motion.div 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-center py-20 px-6 bg-white/20 border-2 border-dashed border-white/40 rounded-[48px] backdrop-blur-sm"
-                    >
-                      <div className="w-16 h-16 bg-white/40 rounded-full flex items-center justify-center mx-auto mb-6 text-aura-muted">
-                        <Search size={32} />
-                      </div>
-                      <h3 className="serif text-2xl font-bold italic mb-2">Nessun esercizio trovato</h3>
-                      <p className="text-aura-muted max-w-md mx-auto">
-                        Non abbiamo trovato esercizi che corrispondano alla tua ricerca "{searchQuery}" nella categoria selezionata.
-                      </p>
-                      <button 
-                        onClick={() => { setSearchQuery(''); setActiveCategory('tutti'); }}
-                        className="mt-8 text-xs font-bold uppercase tracking-widest text-aura-accent hover:underline"
-                      >
-                        Resetta tutti i filtri
-                      </button>
-                    </motion.div>
-                  )}
-                </motion.div>
-              ) : view === 'about' ? (
-                <motion.div
-                  key="view-about"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="max-w-3xl mx-auto space-y-12"
-                >
-                  <header className="text-center">
-                    <h2 className="serif text-5xl font-bold italic mb-6">Cos'è Aura</h2>
-                    <p className="text-aura-muted font-serif italic text-lg">Un rifugio digitale per la mente moderna.</p>
-                  </header>
-                  <div className="prose prose-aura space-y-6 text-aura-ink/80 text-lg leading-relaxed">
-                    <p>
-                      Aura nasce come risposta alla <strong>iper-stimolazione</strong> del mondo contemporaneo. Viviamo in un'era di "massimo impulso e minima riflessione", dove algoritmi e marketing combattono per catturare ogni nostro secondo di attenzione.
-                    </p>
-                    <p>
-                      Questo spazio non è un'app di produttività, né un social network. È uno <strong>strumento di decostruzione</strong>. Gli esercizi proposti servono a creare quella millimetrica distanza tra l'impulso (comprare, sbloccare il telefono, mangiare per noia) e l'azione.
-                    </p>
-                    <div className="bg-white/40 p-10 rounded-[48px] border border-white italic font-serif">
-                      "Aura non ti chiede di cambiare chi sei, ma di osservare come reagisci. Nel distacco risiede la vera libertà di scelta."
-                    </div>
-                  </div>
-                </motion.div>
-              ) : view === 'bio' ? (
-                <motion.div
-                  key="view-bio"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="max-w-3xl mx-auto space-y-12"
-                >
-                  <header className="text-center">
-                    <h2 className="serif text-5xl font-bold italic mb-6">Chi sono</h2>
-                  </header>
-                  <div className="flex flex-col md:flex-row items-center gap-12">
-                    <div className="w-48 h-64 bg-aura-accent/10 rounded-[64px] border border-white flex-shrink-0 flex items-center justify-center overflow-hidden">
-                      <img 
-                        src="https://picsum.photos/seed/aura-bio/400/600" 
-                        alt="Profilo"
-                        className="w-full h-full object-cover grayscale opacity-80"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                    <div className="space-y-6 text-aura-ink/80 text-lg leading-relaxed">
-                      <p>
-                        Sono uno sviluppatore e ricercatore appassionato di <strong>Digital Wellbeing</strong> e minimalismo cognitivo. Credo che la tecnologia debba essere un supporto alla vita umana, non un parassita dell'attenzione.
-                      </p>
-                      <p>
-                        Ho creato Aura per me stesso, per combattere la stanchezza mentale derivante dal lavoro digitale costante. Oggi lo condivido con te, sperando che possa aiutarti a ritrovare il tuo "centro" in mezzo al rumore.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="view-tips"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="max-w-3xl mx-auto space-y-12"
-                >
-                  <header className="text-center">
-                    <h2 className="serif text-5xl font-bold italic mb-6">Consigli</h2>
-                    <p className="text-aura-muted font-serif italic text-lg">Piccoli rituali per la tua pratica quotidiana.</p>
-                  </header>
-                  <div className="grid gap-6">
-                    {[
-                      { 
-                        title: "La Regola dei 10 Minuti", 
-                        desc: "Prima di ogni acquisto non pianificato o del check compulsivo delle email, respira e aspetta 10 minuti. Chiediti: ne ho davvero bisogno o è solo noia?" 
-                      },
-                      { 
-                        title: "Zone No-Tech", 
-                        desc: "Definisci uno spazio in casa (anche solo il letto o il tavolo da pranzo) dove il telefono è fisicamente bandito." 
-                      },
-                      { 
-                        title: "Osserva la Noia", 
-                        desc: "Quando sei in fila o aspetti qualcuno, non sbloccare il telefono. Osserva la tua impazienza come se fossi un ricercatore esterno." 
-                      }
-                    ].map((tip, i) => (
-                      <div key={i} className="bg-white/40 p-8 rounded-[32px] border border-white hover:bg-white transition-all">
-                        <h4 className="font-bold text-aura-accent text-sm uppercase tracking-wider mb-2">{tip.title}</h4>
-                        <p className="text-aura-ink/70 leading-relaxed font-light">{tip.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
+              {currentView === 'dashboard' && <Dashboard key="dashboard" onOpenDrawer={() => setIsDrawerOpen(true)} />}
+              {currentView === 'about' && <About key="about" />}
+              {currentView === 'bio' && <Bio key="bio" />}
+              {currentView === 'tips' && <Tips key="tips" />}
             </AnimatePresence>
 
-            {/* Footer */}
-            <footer className="mt-24 pt-12 border-t border-aura-muted/10 text-center">
-              <p className="text-[10px] uppercase tracking-widest font-bold text-aura-muted opacity-50">
-                Creato per la decostruzione della compulsione moderna
-              </p>
-            </footer>
-          </motion.main>
+            <Footer />
+          </div>
         ) : (
-          <motion.div
-            key="detail"
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20 }}
-          >
+          <div key="detail-shell">
             <ExerciseDetail 
               exercise={selectedExercise} 
-              onBack={() => setSelectedExercise(null)} 
-              onComplete={(id) => updateHistory(id, true)}
+              onBack={() => selectExercise(null)} 
+              onComplete={(id) => completeExercise(id)}
             />
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
+
       <ScrollToTop />
       <SuggestionsDrawer 
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         recentExercises={recentExercises}
         recommendedExercises={recommendedExercises}
-        onSelectExercise={setSelectedExercise}
+        onSelectExercise={selectExercise}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuraProvider>
+      <AppContent />
+    </AuraProvider>
   );
 }
