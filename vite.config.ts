@@ -5,6 +5,9 @@ import {defineConfig} from 'vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    sourcemap: false,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),
@@ -14,5 +17,6 @@ export default defineConfig({
     // HMR is disabled in AI Studio via DISABLE_HMR env var.
     // Do not modify—file watching is disabled to prevent flickering during agent edits.
     hmr: process.env.DISABLE_HMR !== 'true',
+    sourcemapIgnoreList: false,
   },
 });
