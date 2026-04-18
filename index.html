@@ -7,12 +7,8 @@
     <meta name="theme-color" content="#7C9082" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="https://picsum.photos/seed/aura-icon/32/32" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
     <script>
-      // For local development in AI Studio
+      // Configuration for local development and fallback
       window.__FIREBASE_CONFIG__ = {
         "projectId": "gen-lang-client-0332054343",
         "appId": "1:1056557352504:web:175c9405c0939bf829c8cd",
@@ -22,7 +18,12 @@
         "storageBucket": "gen-lang-client-0332054343.firebasestorage.app",
         "messagingSenderId": "1056557352504"
       };
-
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js');

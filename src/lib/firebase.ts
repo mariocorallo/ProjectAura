@@ -6,6 +6,7 @@ import { getFirestore } from 'firebase/firestore';
 const getFirebaseConfig = () => {
   // Try environment variables first (for Vercel/Production)
   if (import.meta.env.VITE_FIREBASE_API_KEY) {
+    console.log("Firebase: Using environment variables");
     return {
       apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
       authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -18,9 +19,15 @@ const getFirebaseConfig = () => {
   }
   
   // For AI Studio local development, we'll try to use the window object or a global
-  // since dynamic imports are tricky in synchronous contexts during build
   // @ts-ignore
-  return window.__FIREBASE_CONFIG__ || {};
+  const localConfig = window.__FIREBASE_CONFIG__;
+  if (localConfig && localConfig.apiKey) {
+    console.log("Firebase: Using local fallback config");
+    return localConfig;
+  }
+
+  console.warn("Firebase: No configuration found!");
+  return {};
 };
 
 const firebaseConfig = getFirebaseConfig();
