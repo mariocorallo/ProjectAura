@@ -21,7 +21,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Alimentazione Single-Tasking',
     description: 'Consumare un pasto in silenzio totale, senza schermi, osservando il cibo.',
     objective: 'Interruzione dell\'alimentazione automatica e ripristino del legame col nutrimento.',
-    category: 'nutrimento',
+    category: 'a pranzo',
     icon: 'Utensils',
     timerSeconds: 300, // 5 minutes
     instructions: [
@@ -428,7 +428,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Masticazione dei 30 Colpi',
     description: 'Masticare ogni singolo boccone esattamente 30 volte prima di deglutire.',
     objective: 'Rallentamento forzato e osservazione della trasformazione della materia.',
-    category: 'nutrimento',
+    category: 'a pranzo',
     icon: 'Waves',
     instructions: [
       'Prendi un boccone di dimensioni normali.',
@@ -443,7 +443,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Il Rituale delle Posate',
     description: 'Appoggiare le posate sul tavolo dopo ogni singolo boccone.',
     objective: 'Interruzione del ritmo compulsivo e separazione degli atti di consumo.',
-    category: 'nutrimento',
+    category: 'a pranzo',
     icon: 'ArrowDownToLine',
     instructions: [
       'Prendi un boccone e portalo alla bocca.',
@@ -458,7 +458,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Assaggio nel Buio',
     description: 'Consumare i primi minuti del pasto con gli occhi completamente chiusi.',
     objective: 'Isolamento sensoriale per riscoprire il gusto puro privo di stimoli visivi.',
-    category: 'nutrimento',
+    category: 'a pranzo',
     icon: 'EyeOff',
     timerSeconds: 180, // 3 minutes
     instructions: [
@@ -474,7 +474,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Analisi Sensoriale degli Ingredienti',
     description: 'Identificare ogni singolo sapore, spezia o consistenza presente in un boccone.',
     objective: 'Decostruzione della massa alimentare in elementi distinti e consci.',
-    category: 'nutrimento',
+    category: 'a pranzo',
     icon: 'Zap',
     instructions: [
       'Chiudi gli occhi mentre mastichi un boccone complesso.',
@@ -489,7 +489,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Termometro della Sazietà',
     description: 'Valutare il proprio livello di fame su una scala da 1 a 10 durante il pasto.',
     objective: 'Distinguere la fame reale dalla voglia compulsiva o dalla noia.',
-    category: 'nutrimento',
+    category: 'a pranzo',
     icon: 'Thermometer',
     instructions: [
       'Prima di iniziare, assegna un numero alla tua fame (1=nullo, 10=estremo).',
@@ -504,7 +504,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Origine del Nutrimento (Radici)',
     description: 'Contemplare il viaggio di un ingrediente dal campo alla tavola prima di mangiarlo.',
     objective: 'Riconnessione profonda con la materia e gratidudine non automatica.',
-    category: 'nutrimento',
+    category: 'a pranzo',
     icon: 'Trees',
     timerSeconds: 120, // 2 minutes
     instructions: [
