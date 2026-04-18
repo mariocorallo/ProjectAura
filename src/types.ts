@@ -38,7 +38,34 @@ export type ExerciseId =
   | 'lettore-etichette'
   | 'tensione-muscolare'
   | 'geometrie-urbane'
-  | 'suoni-ambiente';
+  | 'suoni-ambiente'
+  | 'notifica-fantasma'
+  | 'respiro-semaforo'
+  | 'respiro-serie'
+  | 'pausa-specchio'
+  | 'ritmo-cardio'
+  | 'osservazione-attrezzi'
+  | 'scansione-postura'
+  | 'distacco-musicale'
+  | 'gestione-attesa'
+  | 'consapevolezza-idrica'
+  | 'fine-allenamento'
+  | 'scanner-scrivania'
+  | 'rituale-email'
+  | 'udito-selettivo-pc'
+  | 'micro-movimento-call'
+  | 'pausa-caffe-single'
+  | 'defocalizzazione-visiva'
+  | 'mappatura-click'
+  | 'distacco-task'
+  | 'scanner-cruscotto'
+  | 'ritmo-frecce'
+  | 'ascolto-vibrazioni'
+  | 'mappatura-pedale'
+  | 'distacco-radio'
+  | 'percezione-asfalto'
+  | 'sguardo-periferico'
+  | 'sigillo-viaggio';
 
 export interface Exercise {
   id: ExerciseId;
@@ -47,7 +74,7 @@ export interface Exercise {
   objective: string;
   instructions: string[];
   icon: string;
-  category: 'consapevolezza' | 'creatività' | 'osservazione' | 'nutrimento';
+  category: 'consapevolezza' | 'creatività' | 'osservazione' | 'nutrimento' | 'ufficio' | 'spesa' | 'palestra' | 'auto';
   timerSeconds?: number;
 }
 
@@ -64,3 +91,5 @@ export interface UserHistory {
   lastAccessed: number;
   completedCount: number;
 }
+
+export type SortOption = 'default' | 'alphabetical' | 'duration';

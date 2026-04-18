@@ -550,7 +550,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Analisi Grafica del Carrello',
     description: 'Guarda le confezioni dei prodotti al supermercato senza leggerne le scritte.',
     objective: 'Vedere le forme e i colori invece dei brand e dei prezzi.',
-    category: 'osservazione',
+    category: 'spesa',
     icon: 'ShoppingBag',
     instructions: [
       'Prendi un prodotto dallo scaffale.',
@@ -565,7 +565,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Scanner Muscolare in Palestra',
     description: 'Eseguire un esercizio focalizzandosi esclusivamente sulla contrazione del muscolo.',
     objective: 'Passare dal "quanta fatica faccio" al "cosa sente il mio corpo".',
-    category: 'osservazione',
+    category: 'palestra',
     icon: 'Dumbbell',
     instructions: [
       'Scegli una macchina o un peso libero.',
@@ -580,7 +580,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Geometrie dal Finestrino',
     description: 'Cercare triangoli, cerchi e quadrati nell\'architettura fuori dal bus o dal treno.',
     objective: 'Trasformare il tempo di viaggio in un gioco di scansione geometrica.',
-    category: 'osservazione',
+    category: 'auto',
     icon: 'Box',
     instructions: [
       'Mettiti vicino al finestrino.',
@@ -595,7 +595,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Analisi Acustica d\'Ufficio',
     description: 'Isolare e identificare 5 suoni meccanici o ambientali nel tuo ufficio.',
     objective: 'Riconoscere l\'ecosistema sonoro spesso ignorato o coperto dalle cuffie.',
-    category: 'osservazione',
+    category: 'ufficio',
     icon: 'Radio',
     instructions: [
       'Togli le cuffie per 2 minuti.',
@@ -603,6 +603,420 @@ export const EXERCISES: Exercise[] = [
       'Identifica il fruscio del condizionatore, il ticchettio di una tastiera, una conversazione lontana.',
       'Prova a percepire la "distanza" dei suoni.',
       'Renditi conto dello spazio fisico attraverso l\'udito.'
+    ]
+  },
+  {
+    id: 'notifica-fantasma',
+    title: 'Gestione della Notifica Fantasma',
+    description: 'Osservare l\'impulso di controllare lo smartphone ogni volta che un computer o telefono altrui emette un suono.',
+    objective: 'Decostruire il riflesso pavloviano legato alle notifiche digitali in ufficio.',
+    category: 'ufficio',
+    icon: 'BellRing',
+    instructions: [
+      'Mentre lavori, nota ogni suono di notifica (anche non tuo).',
+      'Osserva la mano che tende a muoversi verso il telefono.',
+      'Fermati e respira consapevolmente per 2 cicli.',
+      'Riconosci che lo stimolo è esterno e non richiede la tua reazione.',
+      'Torna al compito precedente con un sorriso interno.'
+    ]
+  },
+  {
+    id: 'respiro-semaforo',
+    title: 'Check-in al Semaforo',
+    description: 'Usare il tempo di attesa al semaforo rosso per un monitoraggio corporeo rapido.',
+    objective: 'Trasformare un momento di impazienza in uno di riconnessione.',
+    category: 'auto',
+    icon: 'TrafficLight',
+    instructions: [
+      'Quando il semaforo diventa rosso, metti in folle o premi il freno.',
+      'Non toccare il telefono o la radio.',
+      'Fai 3 respiri profondi espandendo la pancia.',
+      'Senti la pressione della schiena contro il sedile.',
+      'Riparti solo quando il verde è bene in vista, con calma.'
+    ]
+  },
+  {
+    id: 'respiro-serie',
+    title: 'Respiro tra le Serie',
+    description: 'Dedicarsi al respiro addominale nei momenti di recupero tra un esercizio e l\'altro.',
+    objective: 'Evitare di riempire i tempi morti dell\'allenamento con stimoli digitali.',
+    category: 'palestra',
+    icon: 'Wind',
+    instructions: [
+      'Dopo aver terminato una serie, siediti o resta in piedi senza muoverti.',
+      'Conta i secondi di recupero basandoti solo sul tuo respiro.',
+      'Ignora gli specchi e gli altri frequentatori.',
+      'Senti il battito cardiaco che rallenta gradualmente.',
+      'Inizia la serie successiva solo quando il fiato è tornato regolare.'
+    ]
+  },
+  {
+    id: 'pausa-specchio',
+    title: 'Oltre lo Specchio',
+    description: 'Guardarsi allo specchio della palestra senza giudicare la propria forma fisica.',
+    objective: 'Osservazione neutra del corpo come tempio della vita, non come oggetto estetico.',
+    category: 'palestra',
+    icon: 'UserCircle',
+    timerSeconds: 120,
+    instructions: [
+      'Mettiti davanti allo specchio.',
+      'Guarda i tuoi occhi per 30 secondi.',
+      'Osserva i muscoli e la pelle come strumenti biologici meravigliosi.',
+      'Se sorge un giudizio ("troppo grasso", "troppo piccolo"), lascialo passare come una nuvola.',
+      'Ringrazia il tuo corpo per lo sforzo che sta compiendo.'
+    ]
+  },
+  {
+    id: 'ritmo-cardio',
+    title: 'Sincronia Cardio',
+    description: 'Sincronizzare il respiro con il movimento ritmico della macchina cardio.',
+    objective: 'Entrare in uno stato di flusso biomeccanico eliminando la noia.',
+    category: 'palestra',
+    icon: 'HeartPulse',
+    timerSeconds: 600,
+    instructions: [
+      'Inizia la tua sessione su tapis roulant, ellittica o bici.',
+      'Spegni il monitor o coprilo con un asciugamano.',
+      'Abbina 4 passi (o pedalate) all\'inspirazione e 4 all\'espirazione.',
+      'Senti il ritmo diventare automatico e meditativo.',
+      'Osserva come la percezione del tempo cambia quando sei presente nel movimento.'
+    ]
+  },
+  {
+    id: 'osservazione-attrezzi',
+    title: 'Architettura del Ghisa',
+    description: 'Osservare la meccanica e il design degli attrezzi mentre si riposa.',
+    objective: 'Curiosità verso l\'ingegneria che supporta il tuo movimento.',
+    category: 'palestra',
+    icon: 'Activity',
+    instructions: [
+      'Durante il recupero, osserva l\'attrezzo che stai usando.',
+      'Nota le carrucole, i cavi, le saldature e le texture del metallo.',
+      'Pensa a chi ha progettato questa macchina per facilitare la tua salute.',
+      'Tocca la superficie fredda del ghisa e senti la sua solidità.',
+      'Rimani presente nell\'ambiente invece di "fuggire" digitalmente.'
+    ]
+  },
+  {
+    id: 'scansione-postura',
+    title: 'Scanner Posturale in Piedi',
+    description: 'Valutare l\'allineamento del corpo tra un esercizio e l\'altro.',
+    objective: 'Correzione consapevole della postura e radicamento a terra.',
+    category: 'palestra',
+    icon: 'Accessibility',
+    instructions: [
+      'Stai in piedi con i piedi alla larghezza delle spalle.',
+      'Senti il peso distribuito equamente su pianta e tallone.',
+      'Distendi la colonna vertebrale come se fossi appeso a un filo.',
+      'Rilassa le spalle e attiva leggermente il core.',
+      'Mantieni questa postura regale per 1 minuto prima della prossima serie.'
+    ]
+  },
+  {
+    id: 'distacco-musicale',
+    title: 'Allenamento nel Silenzio',
+    description: 'Eseguire una parte dell\'allenamento senza musica nelle cuffie.',
+    objective: 'Distacco dalla dipendenza dallo stimolo dopaminergico musicale.',
+    category: 'palestra',
+    icon: 'VolumeX',
+    instructions: [
+      'Togli le cuffie o spegni la musica per 15 minuti.',
+      'Ascolta il suono del tuo respiro e il rumore dei pesi.',
+      'Senti la forza che nasce dal tuo interno senza spinte esterne.',
+      'Osserva se la tua motivazione cala e accetta quella sensazione.',
+      'Scopri la tua vera energia di base.'
+    ]
+  },
+  {
+    id: 'gestione-attesa',
+    title: 'Distacco dall\'Attesa',
+    description: 'Gestire l\'attesa per un attrezzo occupato senza usare il telefono.',
+    objective: 'Allenare la pazienza e l\'osservazione dello spazio circostante.',
+    category: 'palestra',
+    icon: 'Timer',
+    instructions: [
+      'Se l\'attrezzo che ti serve è occupato, aspetta lì vicino.',
+      'Resisti al riflesso di estrarre lo smartphone.',
+      'Osserva lo spazio, il soffitto, le luci o la dinamica della sala.',
+      'Fai dei micro-allungamenti consapevoli per le mani o il collo.',
+      'Accetta l\'attesa come un esercizio di distacco dall\'urgenza.'
+    ]
+  },
+  {
+    id: 'consapevolezza-idrica',
+    title: 'Il Sorso Consapevole',
+    description: 'Bere acqua focalizzandosi sulla sensazione del liquido che rinfresca.',
+    objective: 'Trasformare l\'idratazione in un momento di nutrimento profondo.',
+    category: 'palestra',
+    icon: 'Droplet',
+    instructions: [
+      'Prendi la tua borraccia con entrambe le mani.',
+      'Bevi un piccolo sorso, tenendo l\'acqua in bocca per un istante.',
+      'Senti il percorso del fresco che scende lungo la gola fino allo stomaco.',
+      'Prendi coscienza della fortuna di avere acqua pulita a disposizione.',
+      'Fai tre respiri lenti prima di riposizionare la borraccia.'
+    ]
+  },
+  {
+    id: 'fine-allenamento',
+    title: 'Sigillo dell\'Allenamento',
+    description: 'Dedicare 3 minuti di immobilità totale alla fine della sessione.',
+    objective: 'Passaggio consapevole dallo sforzo fisico alla quiete mentale.',
+    category: 'palestra',
+    icon: 'LayoutGrid',
+    timerSeconds: 180,
+    instructions: [
+      'Siediti o sdraiati in un angolo tranquillo dello spogliatoio o della sala.',
+      'Chiudi gli occhi e senti l\'energia che scorre nel corpo.',
+      'Non controllare messaggi o notifiche appena finito.',
+      'Senti il sudore che si asciuga e il corpo che ringrazia.',
+      'Esci dalla palestra portando con te questa sensazione di calma.'
+    ]
+  },
+  {
+    id: 'scanner-scrivania',
+    title: 'Scanner della Scrivania',
+    description: 'Osservare gli oggetti sulla propria scrivania come se fossero reperti archeologici sconosciuti.',
+    objective: 'De-automatizzazione della percezione degli strumenti di lavoro quotidiani.',
+    category: 'ufficio',
+    icon: 'Monitor',
+    instructions: [
+      'Sposta lo sguardo dallo schermo alla superficie della scrivania.',
+      'Scegli un oggetto (la cucitrice, una penna, il mouse).',
+      'Osservane la forma, il materiale e i segni di usura senza nominarlo mentalmente.',
+      'Pensa alla funzione che svolge e alla materia di cui è fatto.',
+      'Riconoscilo come un oggetto fisico separato dal tuo lavoro.'
+    ]
+  },
+  {
+    id: 'rituale-email',
+    title: 'Rituale della Mail',
+    description: 'Eseguire tre respiri consapevoli prima di aprire o rispondere a una comunicazione digitale.',
+    objective: 'Interrompere il ciclo della reattività e dell\'ansia da risposta immediata.',
+    category: 'ufficio',
+    icon: 'Mail',
+    instructions: [
+      'Posiziona il cursore sul tasto "Invia" o sulla mail da aprire.',
+      'Fermati prima di cliccare.',
+      'Fai 3 respiri profondi, sentendo l\'aria che entra ed esce.',
+      'Chiediti: "Questa risposta nasce dalla fretta o dalla chiarezza?".',
+      'Clicca solo quando senti una calma vigilante.'
+    ]
+  },
+  {
+    id: 'udito-selettivo-pc',
+    title: 'Udito Selettivo del PC',
+    description: 'Isolare e ascoltare i micro-suoni prodotti dall\'hardware del tuo computer.',
+    objective: 'Riconoscere la presenza fisica della macchina oltre l\'interfaccia software.',
+    category: 'ufficio',
+    icon: 'Headphones',
+    instructions: [
+      'Avvicina leggermente l\'orecchio al case o alla tastiera del laptop.',
+      'Cerca di isolare il ronzio della ventola o il sibilo dell\'elettronica.',
+      'Ascolta il suono meccanico della pressione dei tasti.',
+      'Nota come questi suoni costituiscano il "battito" del tuo strumento di lavoro.',
+      'Mantieni l\'ascolto per un minuto, ignorando le notifiche a schermo.'
+    ]
+  },
+  {
+    id: 'micro-movimento-call',
+    title: 'Micro-Movimento in Call',
+    description: 'Eseguire una contrazione muscolare isometrica durante una riunione video o telefonica.',
+    objective: 'Mantenere il radicamento corporeo durante l\'astrazione della comunicazione digitale.',
+    category: 'ufficio',
+    icon: 'Video',
+    instructions: [
+      'Mentre ascolti durante una call, spingi le piante dei piedi contro il pavimento.',
+      'Oppure contrai leggermente i glutei o i muscoli addominali.',
+      'Mantieni la tensione per 5 secondi e rilascia.',
+      'Senti la solidità del tuo corpo fisico mentre la mente è impegnata nel digitale.',
+      'Nessuno vedrà il movimento, ma tu sentirai la tua presenza.'
+    ]
+  },
+  {
+    id: 'pausa-caffe-single',
+    title: 'Pausa Caffè Single-Tasking',
+    description: 'Consumare una bevanda calda in totale solitudine e senza stimoli digitali.',
+    objective: 'Ripristinare il valore della pausa come vero distacco produttivo.',
+    category: 'ufficio',
+    icon: 'Coffee',
+    timerSeconds: 300,
+    instructions: [
+      'Prendi il tuo caffè o tè e allontanati dalla scrivania.',
+      'Lascia il telefono nel cassetto.',
+      'Guarda fuori dalla finestra o fissa un punto neutro nel corridoio.',
+      'Senti il calore della tazza tra le mani e l\'aroma della bevanda.',
+      'Bevi ogni sorso lentamente, senza pensare al task successivo.'
+    ]
+  },
+  {
+    id: 'defocalizzazione-visiva',
+    title: 'De-focalizzazione Visiva',
+    description: 'Guardare oltre lo schermo verso un punto lontano per rilassare la vista.',
+    objective: 'Alleviare lo stress oculare causato dalla focalizzazione fissa sul display.',
+    category: 'ufficio',
+    icon: 'Eye',
+    timerSeconds: 60,
+    instructions: [
+      'Distogli lo sguardo dallo schermo.',
+      'Cerca il punto più lontano visibile (fuori dalla finestra o in fondo al corridoio).',
+      'Sfoca leggermente la vista, lasciando che l\'occhio si rilassi.',
+      'Cerca di percepire la visione periferica invece di quella centrale.',
+      'Mantieni questa "vista morbida" finché il timer non termina.'
+    ]
+  },
+  {
+    id: 'mappatura-click',
+    title: 'Mappatura del Click',
+    description: 'Osservare la frequenza e la compulsività dei propri click per un minuto.',
+    objective: 'Prendere coscienza della velocità meccanica delle proprie interazioni digitali.',
+    category: 'ufficio',
+    icon: 'MousePointer2',
+    timerSeconds: 60,
+    instructions: [
+      'Avvia il timer e continua a lavorare (o navigare).',
+      'Presta attenzione a ogni singolo click del mouse o pressione dei tasti.',
+      'Nota se clicchi per reale necessità o per ansia di movimento.',
+      'Osserva la tensione nelle dita e nel polso.',
+      'A fine minuto, rifletti sulla "densità" della tua interazione.'
+    ]
+  },
+  {
+    id: 'distacco-task',
+    title: 'Respiro del Fine Task',
+    description: 'Chiudere gli occhi per un minuto esatto al termine di un compito importante.',
+    objective: 'Creare un confine netto tra i flussi di lavoro, evitando il multitasking compulsivo.',
+    category: 'ufficio',
+    icon: 'CheckSquare',
+    timerSeconds: 60,
+    instructions: [
+      'Appena termini un task (invio report, fine riunione, chiusura bug).',
+      'Chiudi tutte le schede del browser non necessarie.',
+      'Chiudi gli occhi e avvia il timer.',
+      'Rimani immobile, lasciando che la mente depositi le informazioni del task appena chiuso.',
+      'Non iniziare il nuovo task finché il minuto non è trascorso.'
+    ]
+  },
+  {
+    id: 'scanner-cruscotto',
+    title: 'Scanner del Cruscotto',
+    description: 'Osservare i dettagli del cruscotto e dei materiali interni dell\'auto mentre sei fermo.',
+    objective: 'Riconoscere la complessità dell\'oggetto abitacolo oltre la sua funzione di trasporto.',
+    category: 'auto',
+    icon: 'Gauge',
+    instructions: [
+      'A motore spento, osserva le trame delle plastiche o della pelle.',
+      'Guarda le lancette e i display spenti.',
+      'Tocca i tasti e senti la loro resistenza fisica e il clic meccanico.',
+      'Nota come ogni elemento sia stato progettato per la tua interazione.',
+      'Senti la protezione dell\'abitacolo come uno spazio fisico delimitato.'
+    ]
+  },
+  {
+    id: 'ritmo-frecce',
+    title: 'Sincronia delle Frecce',
+    description: 'Sincronizzare il respiro con il ticchettio sonoro dell\'indicatore di direzione.',
+    objective: 'Trasformare un segnale acustico ripetitivo in un metronomo per la calma.',
+    category: 'auto',
+    icon: 'ArrowRightLeft',
+    instructions: [
+      'Mentre aspetti di svoltare con la freccia inserita.',
+      'Ascolta il ticchettio meccanico della freccia.',
+      'Inspirazione per 4 battiti, espirazione per 4 battiti.',
+      'Lascia che il suono guidi il ritmo del polmone.',
+      'Osserva come l\'attesa diventi un esercizio di ritmo interno.'
+    ]
+  },
+  {
+    id: 'ascolto-vibrazioni',
+    title: 'Ascolto delle Vibrazioni',
+    description: 'Sentire le vibrazioni del motore attraverso le mani sul volante durante la sosta.',
+    objective: 'Connessione tattile con l\'energia meccanica del veicolo.',
+    category: 'auto',
+    icon: 'Activity',
+    instructions: [
+      'Mentre sei fermo al semaforo o in sosta col motore acceso.',
+      'Appoggia entrambe le mani sul volante con una presa leggera.',
+      'Senti la micro-vibrazione costante che risale lungo le braccia.',
+      'Identifica il "battito" del motore come un\'entità viva di metallo.',
+      'Rimani in questo ascolto tattile finché non devi ripartire.'
+    ]
+  },
+  {
+    id: 'mappatura-pedale',
+    title: 'Mappatura del Pedale',
+    description: 'Osservare la pressione millimetrica del piede sul pedale del freno nel traffico intenso.',
+    objective: 'Riconoscere la precisione del proprio corpo in azioni abitualmente automatiche.',
+    category: 'auto',
+    icon: 'Footprints',
+    instructions: [
+      'Durante una coda "stop and go".',
+      'Porta l\'attenzione alla pianta del piede destro.',
+      'Senti il momento esatto in cui la scarpa tocca il gommino del pedale.',
+      'Osserva la forza necessaria per mantenere l\'auto ferma.',
+      'Nota la transizione tra tensione e rilascio quando riparti.'
+    ]
+  },
+  {
+    id: 'distacco-radio',
+    title: 'Distacco dalla Radio',
+    description: 'Guidare per un tratto di strada abituale in totale silenzio.',
+    objective: 'Eliminare il rumore di fondo per osservare i propri pensieri durante il viaggio.',
+    category: 'auto',
+    icon: 'VolumeX',
+    timerSeconds: 600,
+    instructions: [
+      'Spegni la radio, la musica e i podcast.',
+      'Avvia il timer (se possibile) e guida normalmente.',
+      'Ascolta il suono del vento, il rotolamento degli pneumatici e i rumori esterni.',
+      'Osserva se sorge il bisogno di "riempire il vuoto" con dei suoni.',
+      'Accetta il silenzio come compagno di viaggio.'
+    ]
+  },
+  {
+    id: 'percezione-asfalto',
+    title: 'Percezione del Fondo',
+    description: 'Saper distinguere la texture dell\'asfalto o del terreno attraverso il sedile e il volante.',
+    objective: 'Affinamento della propriocezione estesa al mezzo meccanico.',
+    category: 'auto',
+    icon: 'Waves',
+    instructions: [
+      'Mentre guidi a velocità costante.',
+      'Senti le diverse vibrazioni prodotte da asfalti diversi (liscio, rugoso, pavé).',
+      'Immagina la gomma che morde la strada e trasmette l\'informazione al sedile.',
+      'Riconosci come il tuo corpo "legga" il terreno attraverso l\'auto.',
+      'Sii consapevole del contatto tra il veicolo e il pianeta.'
+    ]
+  },
+  {
+    id: 'sguardo-periferico',
+    title: 'Esercizio di Sguardo Periferico',
+    description: 'Mantenere la visione centrale sulla strada mentre si presta attenzione ai bordi.',
+    objective: 'Espandere la consapevolezza spaziale e ridurre la stanchezza da "tunnel visivo".',
+    category: 'auto',
+    icon: 'Eye',
+    instructions: [
+      'Fissa la strada davanti a te.',
+      'Senza muovere gli occhi, cerca di "vedere" i palazzi o gli alberi ai lati.',
+      'Percepisci le auto che si affiancano usando solo la visione laterale.',
+      'Osserva come la mente riesca a processare più informazioni del semplice punto centrale.',
+      'Respira espandendo la visione a 180 gradi.'
+    ]
+  },
+  {
+    id: 'sigillo-viaggio',
+    title: 'Il Sigillo del Viaggio',
+    description: 'Restare seduti in auto per un minuto dopo aver spento il motore a destinazione.',
+    objective: 'Creare una transizione consapevole tra il viaggio e l\'azione successiva.',
+    category: 'auto',
+    icon: 'Lock',
+    timerSeconds: 60,
+    instructions: [
+      'Arriva a destinazione e spegni il motore.',
+      'Non slacciare subito la cintura; non prendere il telefono.',
+      'Rimani immobile mentre l\'abitacolo torna al silenzio.',
+      'Fai 3 respiri di ringraziamento per il viaggio concluso in sicurezza.',
+      'Esci dall\'auto solo quando senti che il viaggio è "depositato".'
     ]
   }
 ];
