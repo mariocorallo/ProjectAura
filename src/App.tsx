@@ -1,106 +1,39 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { doc, getDoc, setDoc, collection, onSnapshot, query, serverTimestamp } from 'firebase/firestore';
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, User } from 'firebase/auth';
-import { db, auth } from './lib/firebase';
 import { EXERCISES } from './constants';
 import { Exercise, UserHistory } from './types';
 import { ExerciseCard } from './components/ExerciseCard';
 import { ExerciseDetail } from './components/ExerciseDetail';
 import { ScrollToTop } from './components/ScrollToTop';
 import { SuggestionsDrawer } from './components/SuggestionsDrawer';
-import { Sparkles, History as HistoryIcon, Lightbulb, Search, X, LogIn, LogOut, User as UserIcon } from 'lucide-react';
+import { Sparkles, History as HistoryIcon, Lightbulb, Search, X } from 'lucide-react';
 
 export default function App() {
-  const [view, setView] = useState<'dashboard' | 'about' | 'bio' | 'tips' | 'support'>('dashboard');
+  const [view, setView] = useState<'dashboard' | 'about' | 'bio' | 'tips'>('dashboard');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [activeCategory, setActiveCategory] = useState<Exercise['category'] | 'tutti'>('tutti');
   const [history, setHistory] = useState<UserHistory[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [isSupporter, setIsSupporter] = useState(false);
 
-  // Auth Listener
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      setAuthLoading(false);
-      
-      if (currentUser) {
-        // Sync Profile
-        const userRef = doc(db, 'users', currentUser.uid);
-        const profile = await getDoc(userRef);
-        if (!profile.exists()) {
-          await setDoc(userRef, {
-            uid: currentUser.uid,
-            email: currentUser.email,
-            displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
-            isSupporter: false,
-            createdAt: serverTimestamp()
-          });
-          setIsSupporter(false);
-        } else {
-          setIsSupporter(profile.data()?.isSupporter || false);
-        }
-
-        // Real-time History sync
-        const historyRef = collection(db, 'users', currentUser.uid, 'history');
-        const q = query(historyRef);
-        const unsubHistory = onSnapshot(q, (snapshot) => {
-          const cloudHistory = snapshot.docs.map(doc => doc.data() as UserHistory);
-          setHistory(cloudHistory);
-        });
-        return () => unsubHistory();
-      } else {
-        // Fallback to local storage if not logged in
-        const saved = localStorage.getItem('aura-history');
-        if (saved) setHistory(JSON.parse(saved));
-      }
-    });
-
-    return () => unsubscribe();
+    const saved = localStorage.getItem('aura-history');
+    if (saved) setHistory(JSON.parse(saved));
   }, []);
 
-  const handleLogin = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error("Login failed", error);
-    }
-  };
-
-  const handleLogout = () => signOut(auth);
-
-  const updateHistory = async (id: string, completed = false) => {
-    if (user) {
-      const historyRef = doc(db, 'users', user.uid, 'history', id);
-      const existingDoc = await getDoc(historyRef);
-      const data = existingDoc.exists() ? existingDoc.data() : { completedCount: 0 };
+  const updateHistory = (id: string, completed = false) => {
+    setHistory(prev => {
+      const existing = prev.find(h => h.exerciseId === id);
+      const updated = existing 
+        ? prev.map(h => h.exerciseId === id 
+            ? { ...h, lastAccessed: Date.now(), completedCount: h.completedCount + (completed ? 1 : 0) } 
+            : h)
+        : [...prev, { exerciseId: id as any, lastAccessed: Date.now(), completedCount: completed ? 1 : 0 }];
       
-      await setDoc(historyRef, {
-        exerciseId: id,
-        lastAccessed: Date.now(),
-        completedCount: data.completedCount + (completed ? 1 : 0)
-      }, { merge: true });
-    } else {
-      // Offline fallback
-      setHistory(prev => {
-        const existing = prev.find(h => h.exerciseId === id);
-        const updated = existing 
-          ? prev.map(h => h.exerciseId === id 
-              ? { ...h, lastAccessed: Date.now(), completedCount: h.completedCount + (completed ? 1 : 0) } 
-              : h)
-          : [...prev, { exerciseId: id as any, lastAccessed: Date.now(), completedCount: completed ? 1 : 0 }];
-        
-        const limited = updated.sort((a, b) => b.lastAccessed - a.lastAccessed).slice(0, 50);
-        localStorage.setItem('aura-history', JSON.stringify(limited));
-        return limited;
-      });
-    }
+      const limited = updated.sort((a, b) => b.lastAccessed - a.lastAccessed).slice(0, 50);
+      localStorage.setItem('aura-history', JSON.stringify(limited));
+      return limited;
+    });
   };
 
   useEffect(() => {
@@ -145,25 +78,7 @@ export default function App() {
     { id: 'about', label: "Cos'è Aura" },
     { id: 'bio', label: 'Chi sono' },
     { id: 'tips', label: 'Consigli' },
-    { id: 'support', label: 'Sostienici' },
   ] as const;
-
-  const handleSupport = async () => {
-    if (!user) {
-      handleLogin();
-      return;
-    }
-    // Simulation: in a real app, this would be a link to Stripe/BMAC 
-    // and a webhook would update the database. For demo, we toggle locally.
-    const userRef = doc(db, 'users', user.uid);
-    await setDoc(userRef, { isSupporter: !isSupporter }, { merge: true });
-    setIsSupporter(!isSupporter);
-
-    // Redirect to coffee (in real case)
-    if (!isSupporter) {
-      window.open('https://www.buymeacoffee.com/', '_blank');
-    }
-  };
 
   return (
     <div className="min-h-screen bg-aura-bg selection:bg-aura-accent/20">
@@ -177,8 +92,7 @@ export default function App() {
             className="max-w-7xl mx-auto px-6 py-12 md:py-16"
           >
             {/* Minimal Navigation */}
-            <nav className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
-              <div className="flex-1 hidden md:block" />
+            <nav className="flex justify-center mb-16">
               <div className="flex items-center p-1 bg-white/40 border border-white rounded-[24px] backdrop-blur-sm shadow-sm transition-all hover:bg-white/60">
                 {menuItems.map((item) => (
                   <button
@@ -193,43 +107,6 @@ export default function App() {
                     {item.label}
                   </button>
                 ))}
-              </div>
-              <div className="flex-1 flex justify-end">
-                {authLoading ? (
-                  <div className="w-8 h-8 rounded-full bg-white/20 animate-pulse" />
-                ) : user ? (
-                  <div className="flex items-center gap-4">
-                    <button 
-                      onClick={handleLogout}
-                      className="text-[10px] font-bold uppercase tracking-widest text-aura-muted hover:text-aura-accent transition-colors flex items-center gap-2"
-                    >
-                      <LogOut size={14} />
-                      <span className="hidden sm:inline">Esci</span>
-                    </button>
-                    <div className="w-8 h-8 rounded-full border border-white overflow-hidden shadow-sm relative">
-                      {user.photoURL ? (
-                        <img src={user.photoURL} alt={user.displayName || 'Utente'} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                      ) : (
-                        <div className="w-full h-full bg-aura-accent/10 flex items-center justify-center text-aura-accent">
-                          <UserIcon size={16} />
-                        </div>
-                      )}
-                      {isSupporter && (
-                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 border border-white rounded-full flex items-center justify-center text-[6px] text-white font-bold">
-                          ★
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={handleLogin}
-                    className="flex items-center gap-2 px-5 py-2 bg-white text-aura-ink rounded-full text-[10px] font-bold uppercase tracking-[0.2em] border border-white shadow-sm hover:shadow-md transition-all active:scale-95"
-                  >
-                    <LogIn size={14} className="text-aura-accent" />
-                    <span>Accedi</span>
-                  </button>
-                )}
               </div>
             </nav>
 
@@ -429,7 +306,7 @@ export default function App() {
                     </div>
                   </div>
                 </motion.div>
-              ) : view === 'tips' ? (
+              ) : (
                 <motion.div
                   key="view-tips"
                   initial={{ opacity: 0, y: 10 }}
@@ -461,78 +338,6 @@ export default function App() {
                         <p className="text-aura-ink/70 leading-relaxed font-light">{tip.desc}</p>
                       </div>
                     ))}
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="view-support"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  className="max-w-4xl mx-auto space-y-16"
-                >
-                  <header className="text-center space-y-6">
-                    <span className="text-[10px] uppercase font-bold tracking-[0.4em] text-aura-muted">Manifesto di Sostegno</span>
-                    <h2 className="serif text-5xl md:text-7xl font-bold italic tracking-tight">Supporta Aura</h2>
-                    <p className="text-aura-muted font-serif italic text-lg max-w-xl mx-auto leading-relaxed">
-                      Aura è uno strumento gratuito e senza pubblicità. Il tuo supporto mi permette di dedicare tempo alla creazione di nuovi esercizi e al mantenimento di questo spazio.
-                    </p>
-                  </header>
-
-                  <div className="grid md:grid-cols-2 gap-12 items-start">
-                    <div className="bg-white/40 p-12 rounded-[56px] border border-white shadow-xl shadow-aura-accent/5 space-y-8">
-                      <h3 className="serif text-2xl italic font-bold">Perché sostenerci?</h3>
-                      <div className="space-y-6">
-                        {[
-                          { title: "Indipendenza", desc: "Niente algoritmi, niente marketing compulsivo. Solo esercizi puri." },
-                          { title: "Tempo", desc: "Ogni caffè sostiene la ricerca e lo sviluppo di nuove pratiche di distacco." },
-                          { title: "Valore", desc: "Supporti un approccio umano e minimale alla tecnologia." }
-                        ].map((item, i) => (
-                          <div key={i} className="flex gap-4">
-                            <div className="w-6 h-6 rounded-full bg-aura-accent/10 flex-shrink-0 flex items-center justify-center text-aura-accent text-[10px] font-bold">
-                              {i+1}
-                            </div>
-                            <div>
-                              <h4 className="font-bold text-xs uppercase tracking-wider mb-1">{item.title}</h4>
-                              <p className="text-aura-muted text-sm leading-relaxed">{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      <button 
-                        onClick={handleSupport}
-                        className="w-full py-5 bg-aura-accent text-white rounded-3xl font-bold text-sm uppercase tracking-widest shadow-lg shadow-aura-accent/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
-                      >
-                        <LogIn size={18} />
-                        {isSupporter ? 'Hai già sostenuto (Grazie!)' : 'Offrimi un caffè'}
-                      </button>
-                    </div>
-
-                    <div className="space-y-8 pt-6">
-                      <h3 className="serif text-2xl italic font-bold">I "Perks" per te</h3>
-                      <div className="grid gap-6">
-                        {[
-                          { icon: "★", title: "Supporter Badge", desc: "Un segno di distinzione sul tuo profilo Aura." },
-                          { icon: "✧", title: "Aura Gold", desc: "Sblocca temi visivi e animazioni esclusive (in arrivo)." },
-                          { icon: "✎", title: "Muro della Gratitudine", desc: "Il tuo nome nella lista di chi crede nel progetto." }
-                        ].map((perk, i) => (
-                          <div key={i} className="flex gap-6 p-6 bg-white/20 rounded-3xl border border-white/40 hover:bg-white/40 transition-colors">
-                            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-aura-accent text-xl shadow-sm">
-                              {perk.icon}
-                            </div>
-                            <div>
-                              <h4 className="font-bold text-sm mb-1">{perk.title}</h4>
-                              <p className="text-aura-muted text-xs leading-relaxed">{perk.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="p-8 bg-aura-accent/5 rounded-[40px] border border-aura-accent/10 italic font-serif text-aura-muted text-sm leading-relaxed">
-                        "Non è una transazione, è una condivisione di valori. Grazie per aiutarmi a mantenere Aura uno spazio protetto."
-                      </div>
-                    </div>
                   </div>
                 </motion.div>
               )}

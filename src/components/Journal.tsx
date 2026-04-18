@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Calendar, Smartphone, Download, Cloud, CloudOff } from 'lucide-react';
-import { collection, query, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp, orderBy } from 'firebase/firestore';
-import { db, auth } from '../lib/firebase';
+import { Plus, Trash2, Calendar, Smartphone, Download } from 'lucide-react';
 import { JournalEntry, ExerciseId } from '../types';
 
 interface JournalProps {
@@ -12,70 +10,15 @@ interface JournalProps {
 export const Journal = ({ exerciseId }: JournalProps) => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [newEntry, setNewEntry] = useState('');
-  const [loading, setLoading] = useState(true);
-  const user = auth.currentUser;
 
   useEffect(() => {
-    if (user) {
-      // Sync with Firebase
-      const journalRef = collection(db, 'users', user.uid, 'journal');
-      const q = query(journalRef, orderBy('timestamp', 'desc'));
-      
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const cloudEntries = snapshot.docs
-          .map(doc => ({ id: doc.id, ...doc.data() } as JournalEntry))
-          .filter(e => e.exerciseId === exerciseId);
-        setEntries(cloudEntries);
-        setLoading(false);
-      });
-      return () => unsubscribe();
-    } else {
-      // Offline fallback
-      const saved = localStorage.getItem(`journal-${exerciseId}`);
-      if (saved) setEntries(JSON.parse(saved));
-      setLoading(false);
-    }
-  }, [exerciseId, user]);
+    const saved = localStorage.getItem(`journal-${exerciseId}`);
+    if (saved) setEntries(JSON.parse(saved));
+  }, [exerciseId]);
 
-  const addEntry = async () => {
-    if (!newEntry.trim()) return;
-    
-    if (user) {
-      try {
-        await addDoc(collection(db, 'users', user.uid, 'journal'), {
-          exerciseId,
-          timestamp: Date.now(),
-          content: newEntry,
-        });
-      } catch (err) {
-        console.error("Cloud save failed", err);
-      }
-    } else {
-      const entry: JournalEntry = {
-        id: crypto.randomUUID(),
-        exerciseId,
-        timestamp: Date.now(),
-        content: newEntry,
-      };
-      const updated = [entry, ...entries];
-      setEntries(updated);
-      localStorage.setItem(`journal-${exerciseId}`, JSON.stringify(updated));
-    }
-    setNewEntry('');
-  };
-
-  const deleteEntry = async (id: string) => {
-    if (user) {
-      try {
-        await deleteDoc(doc(db, 'users', user.uid, 'journal', id));
-      } catch (err) {
-        console.error("Delete failed", err);
-      }
-    } else {
-      const updated = entries.filter((e) => e.id !== id);
-      setEntries(updated);
-      localStorage.setItem(`journal-${exerciseId}`, JSON.stringify(updated));
-    }
+  const saveEntries = (updated: JournalEntry[]) => {
+    setEntries(updated);
+    localStorage.setItem(`journal-${exerciseId}`, JSON.stringify(updated));
   };
 
   const exportEntries = () => {
@@ -96,6 +39,22 @@ export const Journal = ({ exerciseId }: JournalProps) => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const addEntry = () => {
+    if (!newEntry.trim()) return;
+    const entry: JournalEntry = {
+      id: crypto.randomUUID(),
+      exerciseId,
+      timestamp: Date.now(),
+      content: newEntry,
+    };
+    saveEntries([entry, ...entries]);
+    setNewEntry('');
+  };
+
+  const deleteEntry = (id: string) => {
+    saveEntries(entries.filter((e) => e.id !== id));
   };
 
   return (
@@ -122,20 +81,7 @@ export const Journal = ({ exerciseId }: JournalProps) => {
       <div className="space-y-4">
         {entries.length > 0 && (
           <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center space-x-2">
-              <h3 className="text-xs uppercase tracking-widest font-bold text-aura-muted">Cronologia Riflessioni</h3>
-              {user ? (
-                <div className="flex items-center text-[8px] uppercase tracking-tighter text-green-600 bg-green-50 px-1.5 py-0.5 rounded border border-green-100">
-                  <Cloud size={10} className="mr-1" />
-                  Cloud Sync
-                </div>
-              ) : (
-                <div className="flex items-center text-[8px] uppercase tracking-tighter text-aura-muted bg-white/40 px-1.5 py-0.5 rounded border border-white">
-                  <CloudOff size={10} className="mr-1" />
-                  Locale
-                </div>
-              )}
-            </div>
+            <h3 className="text-xs uppercase tracking-widest font-bold text-aura-muted">Cronologia Riflessioni</h3>
             <button
               onClick={exportEntries}
               className="flex items-center space-x-2 text-[10px] uppercase tracking-widest font-bold text-aura-accent hover:text-aura-accent/80 transition-colors"
@@ -146,11 +92,7 @@ export const Journal = ({ exerciseId }: JournalProps) => {
           </div>
         )}
         <AnimatePresence initial={false}>
-          {loading ? (
-             <div className="flex justify-center p-12 opacity-30 animate-pulse">
-               <div className="w-8 h-8 rounded-full border-2 border-aura-accent border-t-transparent animate-spin" />
-             </div>
-          ) : entries.map((entry) => (
+          {entries.map((entry) => (
             <motion.div
               key={entry.id}
               initial={{ opacity: 0, y: 10 }}
