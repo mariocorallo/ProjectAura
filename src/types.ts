@@ -54,7 +54,6 @@ export type ExerciseId =
   | 'rituale-email'
   | 'udito-selettivo-pc'
   | 'micro-movimento-call'
-  | 'pausa-caffe-single'
   | 'defocalizzazione-visiva'
   | 'mappatura-click'
   | 'distacco-task'

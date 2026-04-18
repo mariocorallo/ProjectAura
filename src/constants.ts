@@ -834,22 +834,6 @@ export const EXERCISES: Exercise[] = [
     ]
   },
   {
-    id: 'pausa-caffe-single',
-    title: 'Pausa Caffè Single-Tasking',
-    description: 'Consumare una bevanda calda in totale solitudine e senza stimoli digitali.',
-    objective: 'Ripristinare il valore della pausa come vero distacco produttivo.',
-    category: 'ufficio',
-    icon: 'Coffee',
-    timerSeconds: 300,
-    instructions: [
-      'Prendi il tuo caffè o tè e allontanati dalla scrivania.',
-      'Lascia il telefono nel cassetto.',
-      'Guarda fuori dalla finestra o fissa un punto neutro nel corridoio.',
-      'Senti il calore della tazza tra le mani e l\'aroma della bevanda.',
-      'Bevi ogni sorso lentamente, senza pensare al task successivo.'
-    ]
-  },
-  {
     id: 'defocalizzazione-visiva',
     title: 'De-focalizzazione Visiva',
     description: 'Guardare oltre lo schermo verso un punto lontano per rilassare la vista.',
