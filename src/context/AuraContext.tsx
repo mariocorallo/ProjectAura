@@ -21,6 +21,8 @@ interface AuraContextType {
 
 const AuraContext = createContext<AuraContextType | undefined>(undefined);
 
+const APP_VERSION = '1.1.0'; // Incrementiamo per forzare la pulizia
+
 export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [history, setHistory] = useState<UserHistory[]>([]);
   const [journal, setJournal] = useState<JournalEntry[]>([]);
@@ -30,14 +32,25 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [activeCategory, setActiveCategory] = useState('tutti');
 
   useEffect(() => {
-    const savedHistory = localStorage.getItem('aura-history');
-    const savedJournal = localStorage.getItem('aura-journal');
+    // 1. Controllo Versione e Pulizia "Casino" precedente
+    const savedVersion = localStorage.getItem('aura-version');
+    if (savedVersion !== APP_VERSION) {
+      localStorage.clear(); // Pulisce il vecchio localStorage che faceva casino
+      sessionStorage.clear(); // Pulisce la sessione
+      localStorage.setItem('aura-version', APP_VERSION);
+      console.log('Aura: Cache di versione pulita.');
+    }
+
+    // 2. Caricamento da SESSION storage (si cancella alla chiusura del browser)
+    const savedHistory = sessionStorage.getItem('aura-history');
+    const savedJournal = sessionStorage.getItem('aura-journal');
     if (savedHistory) setHistory(JSON.parse(savedHistory));
     if (savedJournal) setJournal(JSON.parse(savedJournal));
   }, []);
 
   const saveToStorage = (key: string, data: any) => {
-    localStorage.setItem(key, JSON.stringify(data));
+    // Salviamo in SESSION storage come richiesto
+    sessionStorage.setItem(key, JSON.stringify(data));
   };
 
   const completeExercise = (id: string, journalContent?: string) => {
