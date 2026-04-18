@@ -12,6 +12,17 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // For local development in AI Studio
+      window.__FIREBASE_CONFIG__ = {
+        "projectId": "gen-lang-client-0332054343",
+        "appId": "1:1056557352504:web:175c9405c0939bf829c8cd",
+        "apiKey": "AIzaSyA3MPhvwpscd5yFxSQCQjO5-P0Wwoa8lxk",
+        "authDomain": "gen-lang-client-0332054343.firebaseapp.com",
+        "firestoreDatabaseId": "ai-studio-ba0cef63-5225-4307-8aba-ddffc8e92c75",
+        "storageBucket": "gen-lang-client-0332054343.firebasestorage.app",
+        "messagingSenderId": "1056557352504"
+      };
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js');

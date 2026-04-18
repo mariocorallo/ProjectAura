@@ -22,7 +22,7 @@ service cloud.firestore {
       allow update: if isOwner(userId) 
         && incoming().uid == existing().uid
         && incoming().email == existing().email
-        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL']);
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'isSupporter']);
     }
 
     // Exercise History
