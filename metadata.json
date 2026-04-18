@@ -1,0 +1,9 @@
+{
+  "name": "Aura: Esercizi di Distaccamento",
+  "description": "Un'applicazione per praticare il distacco consapevole attraverso esercizi di decostruzione dell'impulso, creatività effimera e presenza mentale.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "timer",
+    "journaling"
+  ]
+}

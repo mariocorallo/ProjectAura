@@ -1,0 +1,23 @@
+{
+  "name": "Aura: Esercizi di Distaccamento",
+  "short_name": "Aura",
+  "description": "Pratica il distacco consapevole attraverso esercizi di decostruzione dell'impulso.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFCFB",
+  "theme_color": "#7C9082",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/aura-icon/192/192",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://picsum.photos/seed/aura-icon/512/512",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
