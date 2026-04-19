@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ShieldCheck, Cookie, ChevronLeft } from 'lucide-react';
 import { useAura } from '../context/AuraContext';
+import { handleEmailContact } from '../utils/contact';
 
 export const Legal: React.FC<{ type: 'privacy' | 'cookie' }> = ({ type }) => {
   const { setView } = useAura();
@@ -99,7 +100,12 @@ export const Legal: React.FC<{ type: 'privacy' | 'cookie' }> = ({ type }) => {
       <footer className="text-center pt-8">
         <p className="text-sm text-aura-muted italic">
           Per qualsiasi domanda relativa a queste policy, puoi scrivermi a: <br />
-          <a href="mailto:mariocorallo@gmail.com" target="_top" className="text-aura-accent hover:underline font-bold">mariocorallo@gmail.com</a>
+          <button 
+            onClick={() => handleEmailContact("Aura App - Privacy / Cookies Info")}
+            className="text-aura-accent hover:underline font-bold cursor-pointer"
+          >
+            mariocorallo@gmail.com
+          </button>
         </p>
       </footer>
     </motion.div>

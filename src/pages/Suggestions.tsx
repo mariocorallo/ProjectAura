@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Send, CheckCircle2, AlertCircle, MessageSquare, Sparkles } from 'lucide-react';
 import { useAuraFeedback } from '../hooks/useAuraFeedback';
+import { handleEmailContact } from '../utils/contact';
 
 export const Suggestions: React.FC = () => {
   const { playSound } = useAuraFeedback();
@@ -32,14 +33,16 @@ export const Suggestions: React.FC = () => {
           </p>
         </div>
 
-        <a
-          href="mailto:mariocorallo@gmail.com?subject=Aura App - Suggerimento / Segnalazione"
-          target="_top"
-          className="inline-flex items-center gap-3 px-12 py-5 bg-aura-ink text-white rounded-[24px] font-bold uppercase tracking-[0.3em] text-[12px] hover:bg-aura-accent transition-all shadow-xl shadow-aura-ink/10"
+        <button
+          onClick={() => {
+            playSound('click');
+            handleEmailContact("Aura App - Suggerimento / Segnalazione");
+          }}
+          className="inline-flex items-center gap-3 px-12 py-5 bg-aura-ink text-white rounded-[24px] font-bold uppercase tracking-[0.3em] text-[12px] hover:bg-aura-accent transition-all shadow-xl shadow-aura-ink/10 cursor-pointer"
         >
           <Send size={18} />
           <span>Invia Email</span>
-        </a>
+        </button>
 
         <div className="pt-8 border-t border-white/40 grid grid-cols-2 gap-8">
           <div className="text-center">

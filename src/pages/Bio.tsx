@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { handleEmailContact } from '../utils/contact';
 
 export const Bio: React.FC = () => {
   return (
@@ -29,13 +30,12 @@ export const Bio: React.FC = () => {
             Ho creato Aura prima di tutto per me stesso. Come molti, ho sentito sulla mia pelle la dispersione causata dal rumore digitale costante. Oggi condivido questo strumento con te, sperando che possa aiutarti a ritrovare il tuo "centro" e la tua presenza.
           </p>
           <div className="pt-8">
-            <a 
-              href="mailto:mariocorallo@gmail.com?subject=Contatto da Aura App"
-              target="_top"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-aura-ink text-white rounded-2xl font-bold uppercase tracking-widest text-[11px] hover:bg-aura-accent transition-all shadow-lg"
+            <button 
+              onClick={() => handleEmailContact("Contatto da Aura App")}
+              className="inline-flex items-center gap-3 px-8 py-4 bg-aura-ink text-white rounded-2xl font-bold uppercase tracking-widest text-[11px] hover:bg-aura-accent transition-all shadow-lg cursor-pointer"
             >
               Scrivimi un'email
-            </a>
+            </button>
           </div>
         </div>
       </div>
