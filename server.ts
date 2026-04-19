@@ -6,7 +6,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const resend = new Resend(process.env.RESEND_API_KEY || 're_VT3gVqXu_MfLqAUzfDkQDspY84ie94iBW');
+let resendClient: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resendClient) {
+    const key = process.env.RESEND_API_KEY;
+    if (!key) {
+      throw new Error('RESEND_API_KEY non configurata negli Environment Variables');
+    }
+    resendClient = new Resend(key);
+  }
+  return resendClient;
+}
 
 async function startServer() {
   const app = express();
@@ -27,6 +38,7 @@ async function startServer() {
     }
 
     try {
+      const resend = getResendClient();
       const subject = type === 'bug' 
         ? "Aura Bug Report / Problema" 
         : "Aura Nuova Pratica / Suggerimento";
