@@ -4,7 +4,21 @@ import { useAura } from '../context/AuraContext';
 import { useAuraFeedback } from '../hooks/useAuraFeedback';
 import { EXERCISES } from '../constants';
 import { ExerciseCard } from '../components/ExerciseCard';
-import { Search, Sparkles, X, History as HistoryIcon } from 'lucide-react';
+import { 
+  Search, 
+  Sparkles, 
+  X, 
+  History as HistoryIcon,
+  LayoutGrid,
+  Zap,
+  Utensils,
+  Palette,
+  Eye,
+  Briefcase,
+  ShoppingBag,
+  Dumbbell,
+  Car
+} from 'lucide-react';
 
 export const Dashboard: React.FC<{ 
   onOpenDrawer: () => void;
@@ -40,15 +54,15 @@ export const Dashboard: React.FC<{
     );
 
   const categories = [
-    { id: 'tutti', label: 'Tutti' },
-    { id: 'consapevolezza', label: 'Consapevolezza' },
-    { id: 'a pranzo', label: 'A Pranzo' },
-    { id: 'creatività', label: 'Creatività' },
-    { id: 'osservazione', label: 'Osservazione' },
-    { id: 'ufficio', label: 'In Ufficio' },
-    { id: 'spesa', label: 'Al Super' },
-    { id: 'palestra', label: 'In Palestra' },
-    { id: 'auto', label: 'In Auto' },
+    { id: 'tutti', label: 'Tutti', icon: LayoutGrid },
+    { id: 'consapevolezza', label: 'Consapevolezza', icon: Zap },
+    { id: 'a pranzo', label: 'A Pranzo', icon: Utensils },
+    { id: 'creatività', label: 'Creatività', icon: Palette },
+    { id: 'osservazione', label: 'Osservazione', icon: Eye },
+    { id: 'ufficio', label: 'In Ufficio', icon: Briefcase },
+    { id: 'spesa', label: 'Al Super', icon: ShoppingBag },
+    { id: 'palestra', label: 'In Palestra', icon: Dumbbell },
+    { id: 'auto', label: 'In Auto', icon: Car },
   ];
 
   return (
@@ -144,12 +158,13 @@ export const Dashboard: React.FC<{
             <button
               key={cat.id}
               onClick={() => handleCategory(cat.id)}
-              className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
+              className={`px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border flex items-center gap-2 ${
                 activeCategory === cat.id
                   ? 'bg-aura-accent text-white border-aura-accent shadow-lg shadow-aura-accent/20'
                   : 'bg-white/40 text-aura-muted hover:bg-white hover:text-aura-accent border-white'
               }`}
             >
+              <cat.icon size={14} className={activeCategory === cat.id ? 'text-white' : 'text-aura-accent/60'} />
               {cat.label}
             </button>
           ))}
