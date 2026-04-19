@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, CheckCircle2, Loader2, Send } from 'lucide-react';
+import { Mail, CheckCircle2, Loader2, Send, Shield } from 'lucide-react';
 import { useAuraFeedback } from '../hooks/useAuraFeedback';
+import { useAura } from '../context/AuraContext';
 
-export const Newsletter: React.FC = () => {
+export const Newsletter: React.FC<{ isView?: boolean }> = ({ isView = false }) => {
   const [email, setEmail] = useState('');
+  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const { playSound } = useAuraFeedback();
+  const { setView } = useAura();
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || status === 'loading') return;
+    if (!email || !acceptedPrivacy || status === 'loading') return;
 
     setStatus('loading');
     playSound('click');
@@ -40,7 +43,7 @@ export const Newsletter: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-24 px-4 pb-12">
+    <div className={`w-full max-w-4xl mx-auto px-4 ${isView ? 'py-12' : 'mt-24 pb-12'}`}>
       <div className="bg-white/40 border border-white rounded-[48px] p-8 md:p-12 backdrop-blur-md shadow-xl shadow-aura-accent/5 overflow-hidden relative">
         {/* Background Accents */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-aura-accent/5 rounded-full blur-3xl -mr-32 -mt-32" />
@@ -87,8 +90,22 @@ export const Newsletter: React.FC = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="la-tua@email.com"
-                      className="w-full pl-12 pr-6 py-5 bg-white/60 border border-white rounded-[24px] focus:outline-none focus:ring-4 focus:ring-aura-accent/10 focus:border-aura-accent/20 transition-all font-medium text-aura-ink placeholder:text-aura-muted/40"
+                      className="w-full pl-12 pr-6 py-4 bg-white/60 border border-aura-ink rounded-[24px] focus:outline-none focus:ring-4 focus:ring-aura-accent/10 focus:border-aura-accent/20 transition-all font-medium text-aura-ink text-sm placeholder:text-aura-muted/60 placeholder:text-[11px]"
                     />
+                  </div>
+
+                  <div className="flex items-start gap-3 px-2">
+                    <input
+                      type="checkbox"
+                      id="privacy"
+                      required
+                      checked={acceptedPrivacy}
+                      onChange={(e) => setAcceptedPrivacy(e.target.checked)}
+                      className="mt-1 w-4 h-4 rounded border-white/60 text-aura-accent focus:ring-aura-accent/20 transition-all cursor-pointer"
+                    />
+                    <label htmlFor="privacy" className="text-[10px] text-aura-muted leading-tight cursor-pointer italic">
+                      Accetto la <button type="button" onClick={() => setView('privacy')} className="text-aura-ink underline hover:text-aura-accent">Privacy Policy</button> e acconsento al trattamento dei dati per la newsletter.
+                    </label>
                   </div>
 
                   {status === 'error' && (

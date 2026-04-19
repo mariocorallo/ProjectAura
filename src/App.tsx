@@ -6,6 +6,7 @@ import { About } from './pages/About';
 import { Bio } from './pages/Bio';
 import { Suggestions } from './pages/Suggestions';
 import { Support } from './pages/Support';
+import { Legal } from './pages/Legal';
 import { ExerciseDetail } from './components/ExerciseDetail';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
@@ -13,6 +14,8 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { SuggestionsDrawer } from './components/SuggestionsDrawer';
 import { NotesDrawer } from './components/NotesDrawer';
 import { CelebrationOverlay } from './components/CelebrationOverlay';
+import { NewsletterFloating } from './components/NewsletterFloating';
+import { Newsletter } from './components/Newsletter';
 import { EXERCISES } from './constants';
 import { Exercise } from './types';
 
@@ -61,6 +64,9 @@ function AppContent() {
               {currentView === 'bio' && <Bio key="bio" />}
               {currentView === 'suggestions' && <Suggestions key="suggestions" />}
               {currentView === 'support' && <Support key="support" />}
+              {currentView === 'newsletter' && <Newsletter key="newsletter" isView={true} />}
+              {currentView === 'privacy' && <Legal key="privacy" type="privacy" />}
+              {currentView === 'cookie-policy' && <Legal key="cookie" type="cookie" />}
             </AnimatePresence>
 
             <Footer />
@@ -78,6 +84,7 @@ function AppContent() {
 
       <ScrollToTop />
       <CelebrationOverlay />
+      <NewsletterFloating />
       <SuggestionsDrawer 
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

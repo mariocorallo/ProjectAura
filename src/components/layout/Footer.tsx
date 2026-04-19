@@ -12,6 +12,8 @@ export const Footer: React.FC = () => {
           <button onClick={() => setView('bio')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Chi sono</button>
           <button onClick={() => setView('suggestions')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Suggerimenti</button>
           <button onClick={() => setView('support')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Sostienici</button>
+          <button onClick={() => setView('privacy')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Privacy Policy</button>
+          <button onClick={() => setView('cookie-policy')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Cookie Policy</button>
         </div>
 
         <div className="text-center">

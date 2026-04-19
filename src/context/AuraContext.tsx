@@ -6,13 +6,13 @@ interface AuraContextType {
   history: UserHistory[];
   journal: JournalEntry[];
   selectedExercise: Exercise | null;
-  currentView: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support';
+  currentView: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter';
   searchQuery: string;
   activeCategory: string;
   isCelebrating: boolean;
   
   // Actions
-  setView: (view: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support') => void;
+  setView: (view: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter') => void;
   selectExercise: (exercise: Exercise | null) => void;
   setSearch: (query: string) => void;
   setCategory: (category: string) => void;
@@ -31,7 +31,7 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [history, setHistory] = useState<UserHistory[]>([]);
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'about' | 'bio' | 'suggestions' | 'support'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('tutti');
   const [isCelebrating, setIsCelebrating] = useState(false);
