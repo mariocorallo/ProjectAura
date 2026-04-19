@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAura } from '../context/AuraContext';
+import { useAuraFeedback } from '../hooks/useAuraFeedback';
 import { LucideIcon } from './LucideIcon';
 import { Timer } from './Timer';
 import { Journal } from './Journal';
 import { Exercise } from '../types';
-import { ArrowLeft, CheckCircle2, Play, CircleStop, Share2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Play, CircleStop, Share2, Sparkles } from 'lucide-react';
 
 interface ExerciseDetailProps {
   exercise: Exercise;
@@ -15,12 +17,15 @@ interface ExerciseDetailProps {
 export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailProps) => {
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [showReflection, setShowReflection] = useState(false);
+  const { triggerCelebration } = useAura();
+  const { playSound } = useAuraFeedback();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [exercise.id]);
 
   const handleShare = async () => {
+    playSound('tap');
     const text = `Prova questo esercizio di Aura: "${exercise.title}"\n\n${exercise.description}`;
     const url = window.location.href;
     
@@ -38,7 +43,7 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
       // Fallback: Copy to clipboard
       try {
         await navigator.clipboard.writeText(`${text}\n\nLink: ${url}`);
-        alert('Link copiato negli appunti!');
+        // alert('Link copiato negli appunti!');
       } catch (err) {
         console.error('Copy failed', err);
       }
@@ -46,11 +51,14 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
   };
 
   const startSession = () => {
+    playSound('click');
     setIsSessionActive(true);
     setShowReflection(false);
   };
 
   const endSession = () => {
+    playSound('success');
+    triggerCelebration();
     setIsSessionActive(false);
     setShowReflection(true);
     if (onComplete) onComplete(exercise.id);
@@ -62,7 +70,7 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
         <motion.button
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={onBack}
+          onClick={() => { playSound('tap'); onBack(); }}
           className="flex items-center space-x-2 text-aura-muted hover:text-aura-accent transition-colors group"
         >
           <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />

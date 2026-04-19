@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAura } from '../context/AuraContext';
+import { useAuraFeedback } from '../hooks/useAuraFeedback';
 import { EXERCISES } from '../constants';
 import { ExerciseCard } from '../components/ExerciseCard';
 import { Search, Sparkles, X, History as HistoryIcon } from 'lucide-react';
@@ -11,6 +12,17 @@ export const Dashboard: React.FC<{ onOpenDrawer: () => void }> = ({ onOpenDrawer
     activeCategory, setCategory, 
     selectExercise 
   } = useAura();
+  const { playSound } = useAuraFeedback();
+
+  const handleCategory = (id: string) => {
+    playSound('tap');
+    setCategory(id);
+  };
+
+  const handleSearch = (val: string) => {
+    if (val.length > searchQuery.length) playSound('tap');
+    setSearch(val);
+  };
 
   const filteredExercises = EXERCISES
     .filter(e => activeCategory === 'tutti' || e.category === activeCategory)
@@ -93,7 +105,7 @@ export const Dashboard: React.FC<{ onOpenDrawer: () => void }> = ({ onOpenDrawer
             type="text"
             placeholder="Cerca un esercizio per titolo o descrizione..."
             value={searchQuery}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             className="w-full pl-14 pr-14 py-5 bg-white/40 border-2 border-white rounded-[32px] backdrop-blur-md text-aura-ink placeholder:text-aura-muted/50 focus:outline-none focus:border-aura-accent/30 focus:bg-white/60 transition-all shadow-xl shadow-aura-accent/5"
           />
           {searchQuery && (
@@ -113,7 +125,7 @@ export const Dashboard: React.FC<{ onOpenDrawer: () => void }> = ({ onOpenDrawer
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setCategory(cat.id)}
+              onClick={() => handleCategory(cat.id)}
               className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
                 activeCategory === cat.id
                   ? 'bg-aura-accent text-white border-aura-accent shadow-lg shadow-aura-accent/20'
@@ -144,7 +156,7 @@ export const Dashboard: React.FC<{ onOpenDrawer: () => void }> = ({ onOpenDrawer
               >
                 <ExerciseCard 
                   exercise={exercise} 
-                  onClick={() => selectExercise(exercise)} 
+                  onClick={() => { playSound('click'); selectExercise(exercise); }} 
                 />
               </motion.div>
             ))}

@@ -6,17 +6,19 @@ interface AuraContextType {
   history: UserHistory[];
   journal: JournalEntry[];
   selectedExercise: Exercise | null;
-  currentView: 'dashboard' | 'about' | 'bio' | 'tips';
+  currentView: 'dashboard' | 'about' | 'bio' | 'tips' | 'support';
   searchQuery: string;
   activeCategory: string;
+  isCelebrating: boolean;
   
   // Actions
-  setView: (view: 'dashboard' | 'about' | 'bio' | 'tips') => void;
+  setView: (view: 'dashboard' | 'about' | 'bio' | 'tips' | 'support') => void;
   selectExercise: (exercise: Exercise | null) => void;
   setSearch: (query: string) => void;
   setCategory: (category: string) => void;
   completeExercise: (id: string, journalContent?: string) => void;
   addJournalEntry: (entry: Omit<JournalEntry, 'id' | 'timestamp'>) => void;
+  triggerCelebration: () => void;
 }
 
 const AuraContext = createContext<AuraContextType | undefined>(undefined);
@@ -27,9 +29,15 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [history, setHistory] = useState<UserHistory[]>([]);
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'about' | 'bio' | 'tips'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'about' | 'bio' | 'tips' | 'support'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('tutti');
+  const [isCelebrating, setIsCelebrating] = useState(false);
+
+  const triggerCelebration = () => {
+    setIsCelebrating(true);
+    setTimeout(() => setIsCelebrating(false), 4000);
+  };
 
   useEffect(() => {
     // 0. Gestione errori di caricamento moduli (Anti-schermata bianca)
@@ -111,12 +119,14 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
       currentView,
       searchQuery,
       activeCategory,
+      isCelebrating,
       setView: setCurrentView,
       selectExercise: setSelectedExercise,
       setSearch: setSearchQuery,
       setCategory: setActiveCategory,
       completeExercise,
-      addJournalEntry
+      addJournalEntry,
+      triggerCelebration
     }}>
       {children}
     </AuraContext.Provider>

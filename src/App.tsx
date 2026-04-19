@@ -5,11 +5,13 @@ import { Dashboard } from './pages/Dashboard';
 import { About } from './pages/About';
 import { Bio } from './pages/Bio';
 import { Tips } from './pages/Tips';
+import { Support } from './pages/Support';
 import { ExerciseDetail } from './components/ExerciseDetail';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
 import { SuggestionsDrawer } from './components/SuggestionsDrawer';
+import { CelebrationOverlay } from './components/CelebrationOverlay';
 import { EXERCISES } from './constants';
 import { Exercise } from './types';
 
@@ -50,6 +52,7 @@ function AppContent() {
               {currentView === 'about' && <About key="about" />}
               {currentView === 'bio' && <Bio key="bio" />}
               {currentView === 'tips' && <Tips key="tips" />}
+              {currentView === 'support' && <Support key="support" />}
             </AnimatePresence>
 
             <Footer />
@@ -66,6 +69,7 @@ function AppContent() {
       </AnimatePresence>
 
       <ScrollToTop />
+      <CelebrationOverlay />
       <SuggestionsDrawer 
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

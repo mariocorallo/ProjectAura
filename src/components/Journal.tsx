@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAuraFeedback } from '../hooks/useAuraFeedback';
 import { Plus, Trash2, Calendar, Smartphone, Download } from 'lucide-react';
 import { JournalEntry, ExerciseId } from '../types';
 
@@ -10,6 +11,7 @@ interface JournalProps {
 export const Journal = ({ exerciseId }: JournalProps) => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [newEntry, setNewEntry] = useState('');
+  const { playSound } = useAuraFeedback();
 
   useEffect(() => {
     const saved = localStorage.getItem(`journal-${exerciseId}`);
@@ -22,6 +24,7 @@ export const Journal = ({ exerciseId }: JournalProps) => {
   };
 
   const exportEntries = () => {
+    playSound('tap');
     if (entries.length === 0) return;
     
     const sortedEntries = [...entries].sort((a, b) => a.timestamp - b.timestamp);
@@ -43,6 +46,7 @@ export const Journal = ({ exerciseId }: JournalProps) => {
 
   const addEntry = () => {
     if (!newEntry.trim()) return;
+    playSound('click');
     const entry: JournalEntry = {
       id: crypto.randomUUID(),
       exerciseId,
@@ -54,6 +58,7 @@ export const Journal = ({ exerciseId }: JournalProps) => {
   };
 
   const deleteEntry = (id: string) => {
+    playSound('tap');
     saveEntries(entries.filter((e) => e.id !== id));
   };
 
