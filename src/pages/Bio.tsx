@@ -31,6 +31,7 @@ export const Bio: React.FC = () => {
           <div className="pt-8">
             <a 
               href="mailto:mariocorallo@gmail.com?subject=Contatto da Aura App"
+              target="_top"
               className="inline-flex items-center gap-3 px-8 py-4 bg-aura-ink text-white rounded-2xl font-bold uppercase tracking-widest text-[11px] hover:bg-aura-accent transition-all shadow-lg"
             >
               Scrivimi un'email

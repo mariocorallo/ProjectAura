@@ -19,6 +19,64 @@ import { Newsletter } from './components/Newsletter';
 import { EXERCISES } from './constants';
 import { Exercise } from './types';
 
+function DebugLog() {
+  const [logs, setLogs] = useState<string[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const originalError = console.error;
+    const originalLog = console.log;
+
+    console.error = (...args) => {
+      setLogs(prev => [...prev, `[ERROR] ${args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ')}`].slice(-10));
+      originalError.apply(console, args);
+    };
+
+    console.log = (...args) => {
+      setLogs(prev => [...prev, `[LOG] ${args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ')}`].slice(-10));
+      originalLog.apply(console, args);
+    };
+
+    const handleGlobalError = (e: ErrorEvent) => {
+      setLogs(prev => [...prev, `[GLB ERROR] ${e.message}`].slice(-10));
+    };
+
+    window.addEventListener('error', handleGlobalError);
+    return () => {
+      console.error = originalError;
+      console.log = originalLog;
+      window.removeEventListener('error', handleGlobalError);
+    };
+  }, []);
+
+  if (logs.length === 0 && !isVisible) return null;
+
+  return (
+    <div className="fixed top-0 left-0 z-[9999] p-2 pointer-events-none">
+      <button 
+        onClick={() => setIsVisible(!isVisible)}
+        className="pointer-events-auto bg-black/80 text-white text-[8px] px-2 py-1 rounded-lg backdrop-blur-sm border border-white/20"
+      >
+        {isVisible ? 'Chiudi Debug' : 'Debug'}
+      </button>
+      {isVisible && (
+        <div className="mt-2 bg-black/90 text-[10px] text-green-400 p-4 rounded-2xl max-w-[280px] pointer-events-auto font-mono shadow-2xl border border-white/10">
+          <div className="flex justify-between items-center mb-2 border-b border-white/10 pb-1">
+            <span className="text-white/40 uppercase tracking-widest text-[8px]">Session Logs</span>
+            <button onClick={() => setLogs([])} className="text-[8px] text-white/40 hover:text-white uppercase">Pulisci</button>
+          </div>
+          <div className="space-y-1 overflow-y-auto max-h-[200px]">
+            {logs.map((log, i) => (
+              <div key={i} className="mb-1 break-words leading-tight">{log}</div>
+            ))}
+            {logs.length === 0 && <div className="text-white/20 italic">Nessun log intercettato...</div>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AppContent() {
   const { 
     currentView, 
@@ -85,6 +143,7 @@ function AppContent() {
       <ScrollToTop />
       <CelebrationOverlay />
       <NewsletterFloating />
+      <DebugLog />
       <SuggestionsDrawer 
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

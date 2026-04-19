@@ -99,7 +99,7 @@ export const Legal: React.FC<{ type: 'privacy' | 'cookie' }> = ({ type }) => {
       <footer className="text-center pt-8">
         <p className="text-sm text-aura-muted italic">
           Per qualsiasi domanda relativa a queste policy, puoi scrivermi a: <br />
-          <a href="mailto:mariocorallo@gmail.com" className="text-aura-accent hover:underline font-bold">mariocorallo@gmail.com</a>
+          <a href="mailto:mariocorallo@gmail.com" target="_top" className="text-aura-accent hover:underline font-bold">mariocorallo@gmail.com</a>
         </p>
       </footer>
     </motion.div>

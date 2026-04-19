@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 
 export const useAuraFeedback = () => {
   const playSound = useCallback((type: 'click' | 'success' | 'tap') => {
+    console.log(`[Sound] Playing: ${type}`);
     try {
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContext();
