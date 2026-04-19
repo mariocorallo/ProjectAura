@@ -34,7 +34,10 @@ export const Suggestions: React.FC = () => {
         body: JSON.stringify({ type, message, email }),
       });
 
-      if (!response.ok) throw new Error("Errore nell'invio del messaggio");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || errorData.error || "Errore nell'invio del messaggio");
+      }
 
       setIsSent(true);
       playSound('success');
@@ -42,7 +45,7 @@ export const Suggestions: React.FC = () => {
       setMessage('');
       setEmail('');
     } catch (err) {
-      setError("C'è stato un problema con l'invio. Riprova più tardi.");
+      setError(err instanceof Error ? err.message : "C'è stato un problema con l'invio. Riprova più tardi.");
     } finally {
       setIsSending(false);
     }

@@ -38,13 +38,14 @@ async function startServer() {
     }
 
     try {
+      console.log("Tentativo invio email con Resend...");
       const resend = getResendClient();
       const subject = type === 'bug' 
         ? "Aura Bug Report / Problema" 
         : "Aura Nuova Pratica / Suggerimento";
 
       const { data, error } = await resend.emails.send({
-        from: 'Aura App <onboarding@resend.dev>',
+        from: 'onboarding@resend.dev',
         to: ['mariocorallo@gmail.com'],
         subject: subject,
         html: `
@@ -56,14 +57,16 @@ async function startServer() {
       });
 
       if (error) {
-        console.error("Resend Error:", error);
-        return res.status(500).json({ error: "Errore nell'invio dell'email" });
+        console.error("Resend API Error:", error);
+        return res.status(400).json({ error: error.message, details: error });
       }
 
+      console.log("Email inviata con successo:", data);
       res.json({ success: true, data });
     } catch (err) {
-      console.error("Server Error:", err);
-      res.status(500).json({ error: "Errore interno del server" });
+      console.error("Server Exception:", err);
+      const errorMessage = err instanceof Error ? err.message : "Errore sconosciuto";
+      res.status(500).json({ error: "Errore interno del server", message: errorMessage });
     }
   });
 
