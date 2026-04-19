@@ -15,7 +15,7 @@ export const Bio: React.FC = () => {
       <div className="flex flex-col md:flex-row items-center gap-12">
         <div className="w-48 h-64 bg-aura-accent/10 rounded-[64px] border border-white flex-shrink-0 flex items-center justify-center overflow-hidden shadow-xl">
           <img 
-            src="/mario.jpg" 
+            src="public/mario.jpg" 
             alt="Mario - Ideatore di Aura"
             className="w-full h-full object-cover grayscale transition-all hover:grayscale-0 duration-700"
             referrerPolicy="no-referrer"
