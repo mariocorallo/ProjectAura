@@ -44,13 +44,11 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // 0. Gestione errori di caricamento moduli (Anti-schermata bianca)
     const handleError = (e: ErrorEvent) => {
-      console.error('App Error:', e.message);
       if (e.message.includes('Loading chunk') || e.message.includes('Script error')) {
         window.location.reload();
       }
     };
     window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', (e) => console.error('Unhandled Promise:', e.reason));
 
     // 1. Controllo Versione e Pulizia "Casino" precedente
     const savedVersion = localStorage.getItem('aura-version');
@@ -58,7 +56,6 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.clear(); // Pulisce il vecchio localStorage che faceva casino
       sessionStorage.clear(); // Pulisce la sessione
       localStorage.setItem('aura-version', APP_VERSION);
-      console.log('Aura: Cache di versione pulita.');
     }
 
     // 2. Caricamento da SESSION storage (si cancella alla chiusura del browser)
