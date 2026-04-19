@@ -52,7 +52,7 @@ export const Suggestions: React.FC = () => {
           </div>
         </div>
       </div>
-旋
+
       <div className="grid md:grid-cols-2 gap-8 pt-12">
         <div className="bg-white/20 p-8 rounded-[40px] border border-white/40">
           <div className="w-10 h-10 bg-aura-accent/10 rounded-full flex items-center justify-center mb-4 text-aura-accent">
