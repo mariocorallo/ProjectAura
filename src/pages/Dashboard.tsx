@@ -4,6 +4,7 @@ import { useAura } from '../context/AuraContext';
 import { useAuraFeedback } from '../hooks/useAuraFeedback';
 import { EXERCISES } from '../constants';
 import { ExerciseCard } from '../components/ExerciseCard';
+import { Newsletter } from '../components/Newsletter';
 import { 
   Search, 
   Sparkles, 
@@ -216,6 +217,10 @@ export const Dashboard: React.FC<{
           </motion.div>
         )}
       </AnimatePresence>
+
+      {!searchQuery && activeCategory === 'tutti' && (
+        <Newsletter />
+      )}
     </motion.div>
   );
 };
