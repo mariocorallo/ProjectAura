@@ -34,7 +34,6 @@ export const Suggestions: React.FC = () => {
 
         <a
           href="mailto:mariocorallo@gmail.com?subject=Aura App - Suggerimento / Segnalazione"
-          onClick={() => playSound('click')}
           className="inline-flex items-center gap-3 px-12 py-5 bg-aura-ink text-white rounded-[24px] font-bold uppercase tracking-[0.3em] text-[12px] hover:bg-aura-accent transition-all shadow-xl shadow-aura-ink/10"
         >
           <Send size={18} />

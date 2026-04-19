@@ -28,6 +28,14 @@ export const Bio: React.FC = () => {
           <p>
             Ho creato Aura prima di tutto per me stesso. Come molti, ho sentito sulla mia pelle la dispersione causata dal rumore digitale costante. Oggi condivido questo strumento con te, sperando che possa aiutarti a ritrovare il tuo "centro" e la tua presenza.
           </p>
+          <div className="pt-8">
+            <a 
+              href="mailto:mariocorallo@gmail.com?subject=Contatto da Aura App"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-aura-ink text-white rounded-2xl font-bold uppercase tracking-widest text-[11px] hover:bg-aura-accent transition-all shadow-lg"
+            >
+              Scrivimi un'email
+            </a>
+          </div>
         </div>
       </div>
     </motion.div>

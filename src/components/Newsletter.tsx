@@ -26,7 +26,13 @@ export const Newsletter: React.FC<{ isView?: boolean }> = ({ isView = false }) =
         body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
+      let data: any = {};
+      const text = await response.text();
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        data = { message: text };
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Errore durante l'iscrizione");
