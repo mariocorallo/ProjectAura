@@ -1,27 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuraFeedback } from '../hooks/useAuraFeedback';
-import { Plus, Trash2, Calendar, Smartphone, Download } from 'lucide-react';
-import { JournalEntry, ExerciseId } from '../types';
+import { useAura } from '../context/AuraContext';
+import { Plus, Trash2, Calendar, Smartphone, Download, Save, Edit3 } from 'lucide-react';
+import { ExerciseId } from '../types';
 
 interface JournalProps {
   exerciseId: ExerciseId;
 }
 
 export const Journal = ({ exerciseId }: JournalProps) => {
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const { journal, addJournalEntry, deleteJournalEntry } = useAura();
   const [newEntry, setNewEntry] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { playSound } = useAuraFeedback();
 
-  useEffect(() => {
-    const saved = localStorage.getItem(`journal-${exerciseId}`);
-    if (saved) setEntries(JSON.parse(saved));
-  }, [exerciseId]);
-
-  const saveEntries = (updated: JournalEntry[]) => {
-    setEntries(updated);
-    localStorage.setItem(`journal-${exerciseId}`, JSON.stringify(updated));
-  };
+  const entries = journal.filter(e => e.exerciseId === exerciseId);
 
   const exportEntries = () => {
     playSound('tap');
@@ -44,49 +39,90 @@ export const Journal = ({ exerciseId }: JournalProps) => {
     URL.revokeObjectURL(url);
   };
 
-  const addEntry = () => {
-    if (!newEntry.trim()) return;
-    playSound('click');
-    const entry: JournalEntry = {
-      id: crypto.randomUUID(),
-      exerciseId,
-      timestamp: Date.now(),
-      content: newEntry,
-    };
-    saveEntries([entry, ...entries]);
-    setNewEntry('');
+  const startTyping = () => {
+    setIsTyping(true);
+    playSound('tap');
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100);
   };
 
-  const deleteEntry = (id: string) => {
-    playSound('tap');
-    saveEntries(entries.filter((e) => e.id !== id));
+  const handleSave = () => {
+    if (!newEntry.trim()) {
+      setIsTyping(false);
+      return;
+    }
+    playSound('click');
+    addJournalEntry({
+      exerciseId,
+      content: newEntry
+    });
+    setNewEntry('');
+    setIsTyping(false);
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
-      <div className="bg-white p-6 rounded-3xl shadow-sm border border-aura-muted/5">
-        <textarea
-          value={newEntry}
-          onChange={(e) => setNewEntry(e.target.value)}
-          placeholder="Cosa senti in questo momento? Quali consapevolezze sono emerse?"
-          className="w-full h-32 p-4 bg-aura-bg/50 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-aura-accent/20 transition-all border border-transparent"
-        />
-        <div className="mt-4 flex justify-end">
-          <button
-            onClick={addEntry}
-            disabled={!newEntry.trim()}
-            className="px-6 py-2 bg-aura-accent text-white rounded-xl font-semibold disabled:opacity-50 hover:bg-aura-accent/90 transition-all flex items-center space-x-2"
-          >
-            <Plus size={18} />
-            <span>Annota</span>
-          </button>
-        </div>
+      <div className="bg-white p-6 rounded-[32px] shadow-sm border border-aura-muted/5 transition-all">
+        <AnimatePresence mode="wait">
+          {!isTyping ? (
+            <motion.div
+              key="button"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex justify-center py-4"
+            >
+              <button
+                onClick={startTyping}
+                className="group flex flex-col items-center gap-3 text-aura-muted hover:text-aura-accent transition-all"
+              >
+                <div className="w-14 h-14 rounded-full bg-aura-accent/5 flex items-center justify-center group-hover:bg-aura-accent/10 transition-colors">
+                  <Edit3 size={24} />
+                </div>
+                <span className="text-[10px] uppercase tracking-[0.3em] font-bold">Annota la tua riflessione</span>
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="input"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-4"
+            >
+              <textarea
+                ref={textareaRef}
+                value={newEntry}
+                onChange={(e) => setNewEntry(e.target.value)}
+                onBlur={() => { if(!newEntry) setIsTyping(false); }}
+                placeholder="Cosa senti in questo momento? Quali consapevolezze sono emerse?"
+                className="w-full h-32 p-4 bg-aura-bg/50 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-aura-accent/20 transition-all border border-transparent"
+              />
+              <div className="flex justify-between items-center">
+                <button 
+                  onClick={() => setIsTyping(false)}
+                  className="text-[10px] uppercase tracking-widest font-bold text-aura-muted hover:text-aura-ink"
+                >
+                  Annulla
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-8 py-3 bg-aura-accent text-white rounded-xl font-bold hover:bg-aura-accent/90 transition-all flex items-center space-x-2 shadow-lg shadow-aura-accent/10"
+                >
+                  <Save size={18} />
+                  <span>Salva Nota</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="space-y-4">
         {entries.length > 0 && (
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xs uppercase tracking-widest font-bold text-aura-muted">Cronologia Riflessioni</h3>
+            <h3 className="text-xs uppercase tracking-widest font-bold text-aura-muted">Riflessioni su questa pratica</h3>
             <button
               onClick={exportEntries}
               className="flex items-center space-x-2 text-[10px] uppercase tracking-widest font-bold text-aura-accent hover:text-aura-accent/80 transition-colors"
@@ -119,7 +155,7 @@ export const Journal = ({ exerciseId }: JournalProps) => {
                 <p className="text-aura-ink leading-relaxed whitespace-pre-wrap">{entry.content}</p>
               </div>
               <button
-                onClick={() => deleteEntry(entry.id)}
+                onClick={() => deleteJournalEntry(entry.id)}
                 className="p-2 text-aura-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
               >
                 <Trash2 size={16} />
@@ -127,12 +163,6 @@ export const Journal = ({ exerciseId }: JournalProps) => {
             </motion.div>
           ))}
         </AnimatePresence>
-        
-        {entries.length === 0 && (
-          <div className="text-center py-12 text-aura-muted italic">
-            Nessuna riflessione ancora. Inizia la tua pratica di distacco.
-          </div>
-        )}
       </div>
     </div>
   );

@@ -6,13 +6,21 @@ import { EXERCISES } from '../constants';
 import { ExerciseCard } from '../components/ExerciseCard';
 import { Search, Sparkles, X, History as HistoryIcon } from 'lucide-react';
 
-export const Dashboard: React.FC<{ onOpenDrawer: () => void }> = ({ onOpenDrawer }) => {
+export const Dashboard: React.FC<{ 
+  onOpenDrawer: () => void;
+  onOpenNotes: () => void;
+}> = ({ onOpenDrawer, onOpenNotes }) => {
   const { 
     searchQuery, setSearch, 
     activeCategory, setCategory, 
     selectExercise 
   } = useAura();
   const { playSound } = useAuraFeedback();
+
+  const handleOpenNotes = () => {
+    playSound('tap');
+    onOpenNotes();
+  };
 
   const handleCategory = (id: string) => {
     playSound('tap');
@@ -72,13 +80,23 @@ export const Dashboard: React.FC<{ onOpenDrawer: () => void }> = ({ onOpenDrawer
                 Ti aiuto a disinnescare il pilota automatico.{"\n"}
                 Aura è un insieme di piccoli esercizi quotidiani per spezzare la compulsione digitale e riprendere il comando della tua attenzione.
               </p>
-              <button 
-                onClick={onOpenDrawer}
-                className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
-              >
-                <Sparkles size={16} className="text-aura-accent group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-aura-muted group-hover:text-aura-accent">Scopri Consigli & Storia</span>
-              </button>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button 
+                  onClick={onOpenDrawer}
+                  className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
+                >
+                  <Sparkles size={16} className="text-aura-accent group-hover:scale-110 transition-transform" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-aura-muted group-hover:text-aura-accent">Scopri Consigli & Storia</span>
+                </button>
+
+                <button 
+                  onClick={handleOpenNotes}
+                  className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
+                >
+                  <HistoryIcon size={16} className="text-aura-accent group-hover:rotate-12 transition-transform" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-aura-muted group-hover:text-aura-accent">Le tue note</span>
+                </button>
+              </div>
             </motion.div>
           ) : (
             <motion.div

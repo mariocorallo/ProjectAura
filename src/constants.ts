@@ -35,13 +35,13 @@ export const EXERCISES: Exercise[] = [
   {
     id: 'produzione-creativa',
     title: 'Produzione Micro-Creativa',
-    description: 'Dedicare tempo alla creazione di una Scatola della Memoria con soggetti Cat Out.',
+    description: 'Dedicare tempo alla creazione di una Scatola della Memoria con soggetti Cut Out.',
     objective: 'Sostituzione dell\'acquisto di oggetti seriali con la creazione di manufatti unici.',
     category: 'creatività',
     icon: 'Box',
     instructions: [
       'Trova una piccola scatola di recupero.',
-      'Raccogli piccoli oggetti significativi o ritagli (Cat Out).',
+      'Raccogli piccoli oggetti significativi o ritagli (Cut Out).',
       'Componi uno scenario all\'interno della scatola.',
       'Dedica almeno 30 minuti a questa creazione fisica.',
       'Osserva il valore dell\'unicità rispetto all\'oggetto di serie.'

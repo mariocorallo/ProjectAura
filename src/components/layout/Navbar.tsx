@@ -11,7 +11,7 @@ export const Navbar: React.FC = () => {
     { id: 'dashboard', label: 'Esercizi' },
     { id: 'about', label: "Cos'è Aura" },
     { id: 'bio', label: 'Chi sono' },
-    { id: 'tips', label: 'Consigli' },
+    { id: 'suggestions', label: 'Suggerimenti' },
     { id: 'support', label: 'Sostienici' },
   ] as const;
 

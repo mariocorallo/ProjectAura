@@ -15,18 +15,18 @@ export const Bio: React.FC = () => {
       <div className="flex flex-col md:flex-row items-center gap-12">
         <div className="w-48 h-64 bg-aura-accent/10 rounded-[64px] border border-white flex-shrink-0 flex items-center justify-center overflow-hidden shadow-xl">
           <img 
-            src="https://picsum.photos/seed/aura-bio/400/600" 
-            alt="Profilo"
-            className="w-full h-full object-cover grayscale opacity-80"
+            src="/mario.jpg" 
+            alt="Mario - Ideatore di Aura"
+            className="w-full h-full object-cover grayscale transition-all hover:grayscale-0 duration-700"
             referrerPolicy="no-referrer"
           />
         </div>
         <div className="space-y-6 text-aura-ink/80 text-lg leading-relaxed">
           <p>
-            Sono uno sviluppatore e ricercatore appassionato di <strong>Digital Wellbeing</strong> e minimalismo cognitivo. Credo che la tecnologia debba essere un supporto alla vita umana, non un parassita dell'attenzione.
+            Sono un <strong>artista</strong> con competenze digitali, maturate in oltre 30 anni di lavoro in questo settore. Non sono solo uno sviluppatore: la mia visione unisce l'estetica alla funzionalità per decostruire gli automatismi della nostra vita digitale.
           </p>
           <p>
-            Ho creato Aura per me stesso, per combattere la stanchezza mentale derivante dal lavoro digitale costante. Oggi lo condivido con te, sperando che possa aiutarti a ritrovare il tuo "centro" in mezzo al rumore.
+            Ho creato Aura prima di tutto per me stesso. Come molti, ho sentito sulla mia pelle la dispersione causata dal rumore digitale costante. Oggi condivido questo strumento con te, sperando che possa aiutarti a ritrovare il tuo "centro" e la tua presenza.
           </p>
         </div>
       </div>

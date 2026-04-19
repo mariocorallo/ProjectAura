@@ -10,7 +10,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6">
           <button onClick={() => setView('about')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Cos'è Aura</button>
           <button onClick={() => setView('bio')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Chi sono</button>
-          <button onClick={() => setView('tips')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Consigli</button>
+          <button onClick={() => setView('suggestions')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Suggerimenti</button>
           <button onClick={() => setView('support')} className="text-[10px] uppercase font-bold tracking-widest text-aura-muted hover:text-aura-accent transition-colors">Sostienici</button>
         </div>
 

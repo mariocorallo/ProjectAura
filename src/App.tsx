@@ -4,13 +4,14 @@ import { AuraProvider, useAura } from './context/AuraContext';
 import { Dashboard } from './pages/Dashboard';
 import { About } from './pages/About';
 import { Bio } from './pages/Bio';
-import { Tips } from './pages/Tips';
+import { Suggestions } from './pages/Suggestions';
 import { Support } from './pages/Support';
 import { ExerciseDetail } from './components/ExerciseDetail';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
 import { SuggestionsDrawer } from './components/SuggestionsDrawer';
+import { NotesDrawer } from './components/NotesDrawer';
 import { CelebrationOverlay } from './components/CelebrationOverlay';
 import { EXERCISES } from './constants';
 import { Exercise } from './types';
@@ -24,6 +25,7 @@ function AppContent() {
     completeExercise 
   } = useAura();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,10 +50,16 @@ function AppContent() {
             <Navbar />
             
             <AnimatePresence mode="wait">
-              {currentView === 'dashboard' && <Dashboard key="dashboard" onOpenDrawer={() => setIsDrawerOpen(true)} />}
+              {currentView === 'dashboard' && (
+                <Dashboard 
+                  key="dashboard" 
+                  onOpenDrawer={() => setIsDrawerOpen(true)} 
+                  onOpenNotes={() => setIsNotesOpen(true)}
+                />
+              )}
               {currentView === 'about' && <About key="about" />}
               {currentView === 'bio' && <Bio key="bio" />}
-              {currentView === 'tips' && <Tips key="tips" />}
+              {currentView === 'suggestions' && <Suggestions key="suggestions" />}
               {currentView === 'support' && <Support key="support" />}
             </AnimatePresence>
 
@@ -76,6 +84,10 @@ function AppContent() {
         recentExercises={recentExercises}
         recommendedExercises={recommendedExercises}
         onSelectExercise={selectExercise}
+      />
+      <NotesDrawer 
+        isOpen={isNotesOpen}
+        onClose={() => setIsNotesOpen(false)}
       />
     </div>
   );

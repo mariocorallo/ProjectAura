@@ -6,18 +6,20 @@ interface AuraContextType {
   history: UserHistory[];
   journal: JournalEntry[];
   selectedExercise: Exercise | null;
-  currentView: 'dashboard' | 'about' | 'bio' | 'tips' | 'support';
+  currentView: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support';
   searchQuery: string;
   activeCategory: string;
   isCelebrating: boolean;
   
   // Actions
-  setView: (view: 'dashboard' | 'about' | 'bio' | 'tips' | 'support') => void;
+  setView: (view: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support') => void;
   selectExercise: (exercise: Exercise | null) => void;
   setSearch: (query: string) => void;
   setCategory: (category: string) => void;
   completeExercise: (id: string, journalContent?: string) => void;
   addJournalEntry: (entry: Omit<JournalEntry, 'id' | 'timestamp'>) => void;
+  updateJournalEntry: (id: string, content: string) => void;
+  deleteJournalEntry: (id: string) => void;
   triggerCelebration: () => void;
 }
 
@@ -29,7 +31,7 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [history, setHistory] = useState<UserHistory[]>([]);
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'about' | 'bio' | 'tips' | 'support'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'about' | 'bio' | 'suggestions' | 'support'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('tutti');
   const [isCelebrating, setIsCelebrating] = useState(false);
@@ -111,6 +113,22 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const updateJournalEntry = (id: string, content: string) => {
+    setJournal(prev => {
+      const updated = prev.map(e => e.id === id ? { ...e, content, timestamp: Date.now() } : e);
+      saveToStorage('aura-journal', updated);
+      return updated;
+    });
+  };
+
+  const deleteJournalEntry = (id: string) => {
+    setJournal(prev => {
+      const updated = prev.filter(e => e.id !== id);
+      saveToStorage('aura-journal', updated);
+      return updated;
+    });
+  };
+
   return (
     <AuraContext.Provider value={{
       history,
@@ -126,6 +144,8 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCategory: setActiveCategory,
       completeExercise,
       addJournalEntry,
+      updateJournalEntry,
+      deleteJournalEntry,
       triggerCelebration
     }}>
       {children}
