@@ -99,7 +99,17 @@ async function startServer() {
         })
       });
 
-      const data = await response.json();
+      if (response.status === 204 || response.status === 201) {
+        return res.json({ success: true });
+      }
+
+      const text = await response.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        data = { message: text };
+      }
 
       if (!response.ok) {
         console.error("Brevo API Error:", data);

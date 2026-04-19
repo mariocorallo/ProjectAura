@@ -14,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey) {
     console.error("BREVO_API_KEY non configurata");
-    return res.status(500).json({ error: "Servizio newsletter non configurato. Assicurati di aver aggiunto BREVO_API_KEY nelle Environment Variables di Vercel." });
+    return res.status(500).json({ error: "Servizio newsletter non configurato nelle Environment Variables di Vercel." });
   }
 
   try {
@@ -31,16 +31,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
     });
 
-    const data = await response.json();
+    // Brevo returns 204 No Content for successful updates when updateEnabled is true
+    // fetching .json() on a 204 response causes "Unexpected end of JSON input"
+    if (response.status === 204 || response.status === 201) {
+      return res.status(200).json({ success: true });
+    }
+
+    const text = await response.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { message: text };
+    }
 
     if (!response.ok) {
       console.error("Brevo API Error:", data);
+      
+      // Specifically handle "already exists" if it's not handled by 204
+      if (text.includes('already_exists')) {
+          return res.status(200).json({ success: true, message: "Contatto già esistente" });
+      }
+
       return res.status(response.status).json({ error: "Errore durante l'iscrizione", details: data });
     }
 
     return res.status(200).json({ success: true, data });
   } catch (err) {
     console.error("Brevo Exception:", err);
-    return res.status(500).json({ error: "Errore interno del server" });
+    // Explicitly returning the error message to help the user debug on Vercel
+    return res.status(500).json({ 
+      error: "Errore interno del server", 
+      message: err instanceof Error ? err.message : String(err) 
+    });
   }
 }
