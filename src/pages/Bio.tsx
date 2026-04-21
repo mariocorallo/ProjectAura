@@ -24,7 +24,7 @@ export const Bio: React.FC = () => {
         </div>
         <div className="space-y-6 text-aura-ink/80 text-lg leading-relaxed">
           <p>
-            Sono un <strong>artista</strong> con competenze digitali, maturate in oltre 30 anni di lavoro in questo settore. Non sono solo uno sviluppatore: la mia visione unisce l'estetica alla funzionalità per decostruire gli automatismi della nostra vita digitale.
+            Sono un <strong>creativo</strong> con competenze digitali, maturate in oltre 30 anni di lavoro in questo settore. Non sono solo uno sviluppatore: la mia visione unisce l'estetica alla funzionalità per decostruire gli automatismi della nostra vita digitale.
           </p>
           <p>
             Ho creato Aura prima di tutto per me stesso. Come molti, ho sentito sulla mia pelle la dispersione causata dal rumore digitale costante. Oggi condivido questo strumento con te, sperando che possa aiutarti a ritrovare il tuo "centro" e la tua presenza.
