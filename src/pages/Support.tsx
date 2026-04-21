@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Coffee, Heart, Sparkles, ExternalLink } from 'lucide-react';
+import { useAura } from '../context/AuraContext';
 
 export const Support: React.FC = () => {
+  const { trackClick } = useAura();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -55,6 +57,7 @@ export const Support: React.FC = () => {
           href="https://buymeacoffee.com/progettoaura"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackClick('Donation', 'Buy Me a Coffee')}
           className="inline-flex items-center gap-3 bg-aura-accent text-white px-10 py-5 rounded-full font-bold uppercase tracking-[0.2em] text-[12px] transition-all hover:scale-105 hover:shadow-xl active:scale-95 group/btn"
         >
           Vai a Buy Me a Coffee

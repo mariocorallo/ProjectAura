@@ -28,17 +28,20 @@ export const Dashboard: React.FC<{
   const { 
     searchQuery, setSearch, 
     activeCategory, setCategory, 
-    selectExercise 
+    selectExercise,
+    trackClick
   } = useAura();
   const { playSound } = useAuraFeedback();
 
   const handleOpenNotes = () => {
     playSound('tap');
+    trackClick('Dashboard', 'Open Notes');
     onOpenNotes();
   };
 
   const handleCategory = (id: string) => {
     playSound('tap');
+    trackClick('Dashboard', `Filter Category: ${id}`);
     setCategory(id);
   };
 
@@ -97,7 +100,7 @@ export const Dashboard: React.FC<{
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <button 
-                  onClick={onOpenDrawer}
+                  onClick={() => { trackClick('Dashboard', 'Open Drawer'); onOpenDrawer(); }}
                   className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
                 >
                   <Sparkles size={16} className="text-aura-accent group-hover:scale-110 transition-transform" />

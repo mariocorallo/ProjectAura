@@ -10,7 +10,7 @@ export const Newsletter: React.FC<{ isView?: boolean }> = ({ isView = false }) =
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const { playSound } = useAuraFeedback();
-  const { setView } = useAura();
+  const { setView, trackClick } = useAura();
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +18,7 @@ export const Newsletter: React.FC<{ isView?: boolean }> = ({ isView = false }) =
 
     setStatus('loading');
     playSound('click');
+    trackClick('Newsletter', 'Subscribe Attempt');
 
     try {
       const response = await fetch('/api/newsletter/subscribe', {
@@ -38,6 +39,7 @@ export const Newsletter: React.FC<{ isView?: boolean }> = ({ isView = false }) =
         throw new Error(data.error || "Errore durante l'iscrizione");
       }
 
+      trackClick('Newsletter', 'Subscribe Success');
       setStatus('success');
       playSound('success');
       setEmail('');

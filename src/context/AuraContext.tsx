@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Exercise, UserHistory, JournalEntry } from '../types';
 import { EXERCISES } from '../constants';
+import { trackPageView, trackEvent } from '../lib/analytics';
 
 interface AuraContextType {
   history: UserHistory[];
@@ -21,6 +22,7 @@ interface AuraContextType {
   updateJournalEntry: (id: string, content: string) => void;
   deleteJournalEntry: (id: string) => void;
   triggerCelebration: () => void;
+  trackClick: (target: string, label?: string) => void;
 }
 
 const AuraContext = createContext<AuraContextType | undefined>(undefined);
@@ -39,6 +41,10 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const triggerCelebration = () => {
     setIsCelebrating(true);
     setTimeout(() => setIsCelebrating(false), 4000);
+  };
+
+  const trackClick = (target: string, label?: string) => {
+    trackEvent('Click', target, label);
   };
 
   useEffect(() => {
@@ -65,6 +71,19 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (savedJournal) setJournal(JSON.parse(savedJournal));
   }, []);
 
+  // Track Page Views
+  useEffect(() => {
+    let path = `/${currentView}`;
+    let title = currentView.charAt(0).toUpperCase() + currentView.slice(1);
+    
+    if (selectedExercise) {
+      path = `/exercise/${selectedExercise.id}`;
+      title = `Esercizio: ${selectedExercise.title}`;
+    }
+    
+    trackPageView(path, title);
+  }, [currentView, selectedExercise]);
+
   const saveToStorage = (key: string, data: any) => {
     // Salviamo in SESSION storage come richiesto
     sessionStorage.setItem(key, JSON.stringify(data));
@@ -82,6 +101,12 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
       saveToStorage('aura-history', updated);
       return updated;
     });
+
+    // Track Completion
+    const exercise = EXERCISES.find(e => e.id === id);
+    if (exercise) {
+      trackEvent('Exercise', 'Complete', exercise.title);
+    }
 
     // Add Journal Entry if provided
     if (journalContent) {
@@ -138,14 +163,18 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
       activeCategory,
       isCelebrating,
       setView: setCurrentView,
-      selectExercise: setSelectedExercise,
+      selectExercise: (exercise: Exercise | null) => {
+        if (exercise) trackEvent('Exercise', 'Open', exercise.title);
+        setSelectedExercise(exercise);
+      },
       setSearch: setSearchQuery,
       setCategory: setActiveCategory,
       completeExercise,
       addJournalEntry,
       updateJournalEntry,
       deleteJournalEntry,
-      triggerCelebration
+      triggerCelebration,
+      trackClick
     }}>
       {children}
     </AuraContext.Provider>

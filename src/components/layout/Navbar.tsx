@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const { currentView, setView } = useAura();
+  const { currentView, setView, trackClick } = useAura();
   const { playSound } = useAuraFeedback();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -19,6 +19,7 @@ export const Navbar: React.FC = () => {
   ] as const;
   const handleNav = (id: typeof menuItems[number]['id']) => {
     playSound('tap');
+    trackClick('Navbar', `Navigate to ${id}`);
     setView(id);
     setIsOpen(false);
   };
