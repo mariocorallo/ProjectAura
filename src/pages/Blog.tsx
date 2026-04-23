@@ -23,10 +23,18 @@ export const Blog: React.FC = () => {
   const selectedPost = slug ? BLOG_POSTS.find(p => p.slug === slug) : null;
 
   React.useEffect(() => {
+    const metaDescription = document.querySelector('meta[name="description"]');
+    
     if (selectedPost) {
       document.title = `${selectedPost.title} | Aura Blog`;
+      if (metaDescription) {
+        metaDescription.setAttribute('content', selectedPost.excerpt);
+      }
     } else {
       document.title = 'Journal | Aura Blog';
+      if (metaDescription) {
+        metaDescription.setAttribute('content', 'Appunti di navigazione nel mare della distrazione. Leggi gli articoli di Aura sulla consapevolezza digitale.');
+      }
     }
   }, [selectedPost]);
 

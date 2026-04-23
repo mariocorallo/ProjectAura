@@ -36,6 +36,10 @@ function AppContent() {
     window.scrollTo(0, 0);
     if (!location.pathname.startsWith('/blog')) {
       document.title = 'Aura: Esercizi di Distaccamento';
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', "Scegli la presenza. Aura ti aiuta a disinnescare il pilota automatico attraverso esercizi di distacco e consapevolezza digitale.");
+      }
     }
   }, [location.pathname, selectedExercise]);
 
