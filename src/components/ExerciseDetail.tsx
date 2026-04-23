@@ -64,18 +64,24 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
     if (onComplete) onComplete(exercise.id);
   };
 
+  const renderBackButton = () => (
+    <motion.button
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => { playSound('tap'); onBack(); }}
+      className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white shadow-sm border border-aura-accent/10 text-aura-muted hover:text-aura-accent hover:border-aura-accent/20 transition-all group"
+    >
+      <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
+      <span className="font-semibold text-sm">Indietro</span>
+    </motion.button>
+  );
+
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
       <div className="flex items-center justify-between mb-12">
-        <motion.button
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          onClick={() => { playSound('tap'); onBack(); }}
-          className="flex items-center space-x-2 text-aura-muted hover:text-aura-accent transition-colors group"
-        >
-          <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
-          <span className="font-medium">Indietro</span>
-        </motion.button>
+        {renderBackButton()}
 
         <motion.button
           initial={{ opacity: 0, x: 10 }}
@@ -88,7 +94,7 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
         </motion.button>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12 items-start">
+      <div className="grid md:grid-cols-2 gap-12 items-start mb-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -254,6 +260,12 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
             )}
           </AnimatePresence>
         </motion.div>
+      </div>
+
+      <div className="pt-12 border-t border-aura-accent/5">
+        <div className="flex justify-start">
+          {renderBackButton()}
+        </div>
       </div>
     </div>
   );

@@ -2,6 +2,24 @@ import { Exercise } from './types';
 
 export const EXERCISES: Exercise[] = [
   {
+    id: 'macro-osservazione',
+    title: 'Macro Osservazione',
+    description: 'Dettaglio Invisibile. Allenare lo sguardo a cogliere la complessità nascosta nelle cose semplici.',
+    objective: 'Allenare lo sguardo a cogliere la complessità nascosta nelle cose semplici.',
+    category: 'everyday',
+    icon: 'Camera',
+    instructions: [
+      'Mettiti fermo, in un luogo tranquillo.',
+      'Apri la fotocamera del telefono e attiva la modalità macro.',
+      'Avvicinati a un oggetto semplice (cibo, pelle, tessuto, carta).',
+      'Scatta una foto molto ravvicinata, cercando il massimo dettaglio.',
+      'Osserva l’immagine per alcuni minuti, senza fretta.',
+      'Nota texture, forme, imperfezioni, strutture che a occhio nudo non vedevi.',
+      'Se la mente interpreta o giudica, riportala al puro guardare.',
+      'Chiudi riconoscendo quanta complessità esiste in ciò che sembrava banale.'
+    ]
+  },
+  {
     id: 'digiuno-acquisto',
     title: 'Digiuno Sensoriale dell\'Acquisto',
     description: 'Entrare in un negozio o sito web osservando il marketing senza comprare nulla.',
@@ -52,7 +70,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Mappatura degli Automatismi',
     description: 'Annotare ogni impulso compulsivo verso smartphone o acquisti per noia.',
     objective: 'Rendere consci i trigger della compulsione moderna tramite l\'autoconsapevolezza.',
-    category: 'osservazione',
+    category: 'everyday',
     icon: 'SmartphoneNfc',
     instructions: [
       'Porta con te un taccuino (digitale o cartaceo).',
@@ -293,7 +311,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Doodle delle Notifiche',
     description: 'Ogni volta che senti un suono di notifica, fai un piccolo scarabocchio colorato.',
     objective: 'Trasformare l\'interruzione acustica in un pattern visivo collettivo.',
-    category: 'consapevolezza',
+    category: 'everyday',
     icon: 'BellRing',
     instructions: [
       'Tieni un foglio e dei colori pronti sulla scrivania.',
@@ -428,7 +446,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Masticazione dei 30 Colpi',
     description: 'Masticare ogni singolo boccone esattamente 30 volte prima di deglutire.',
     objective: 'Rallentamento forzato e osservazione della trasformazione della materia.',
-    category: 'a pranzo',
+    category: 'everyday',
     icon: 'Waves',
     instructions: [
       'Prendi un boccone di dimensioni normali.',
@@ -610,7 +628,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Gestione della Notifica Fantasma',
     description: 'Osservare l\'impulso di controllare lo smartphone ogni volta che un computer o telefono altrui emette un suono.',
     objective: 'Decostruire il riflesso pavloviano legato alle notifiche digitali in ufficio.',
-    category: 'ufficio',
+    category: 'everyday',
     icon: 'BellRing',
     instructions: [
       'Mentre lavori, nota ogni suono di notifica (anche non tuo).',
@@ -625,7 +643,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Check-in al Semaforo',
     description: 'Usare il tempo di attesa al semaforo rosso per un monitoraggio corporeo rapido.',
     objective: 'Trasformare un momento di impazienza in uno di riconnessione.',
-    category: 'auto',
+    category: 'everyday',
     icon: 'TrafficLight',
     instructions: [
       'Quando il semaforo diventa rosso, metti in folle o premi il freno.',
@@ -747,7 +765,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Il Sorso Consapevole',
     description: 'Bere acqua focalizzandosi sulla sensazione del liquido che rinfresca.',
     objective: 'Trasformare l\'idratazione in un momento di nutrimento profondo.',
-    category: 'palestra',
+    category: 'everyday',
     icon: 'Droplet',
     instructions: [
       'Prendi la tua borraccia con entrambe le mani.',
@@ -778,7 +796,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Scanner della Scrivania',
     description: 'Osservare gli oggetti sulla propria scrivania come se fossero reperti archeologici sconosciuti.',
     objective: 'De-automatizzazione della percezione degli strumenti di lavoro quotidiani.',
-    category: 'ufficio',
+    category: 'everyday',
     icon: 'Monitor',
     instructions: [
       'Sposta lo sguardo dallo schermo alla superficie della scrivania.',

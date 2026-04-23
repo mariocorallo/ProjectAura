@@ -59,6 +59,7 @@ export const Dashboard: React.FC<{
 
   const categories = [
     { id: 'tutti', label: 'Tutti', icon: LayoutGrid },
+    { id: 'everyday', label: 'EVERYDAY', icon: Zap },
     { id: 'consapevolezza', label: 'Consapevolezza', icon: Zap },
     { id: 'a pranzo', label: 'A Pranzo', icon: Utensils },
     { id: 'creatività', label: 'Creatività', icon: Palette },
