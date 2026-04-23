@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://prottoaura.xyz/sitemap.xml
+Sitemap: https://progettoaura.xyz/sitemap.xml
