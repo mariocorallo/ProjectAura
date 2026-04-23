@@ -8,6 +8,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: '23 Aprile 2026',
     author: 'Mario Corallo',
     readTime: '8 min lettura',
+    category: 'Digital Wellness',
     content: `
 Ti è mai capitato di sbloccare il telefono per controllare l'ora e ritrovarti, venti minuti dopo, a scorrere un feed infinito senza ricordare come ci sei arrivato? Questa è la manifestazione perfetta del **pilota automatico**.
 
@@ -42,6 +43,7 @@ Scegliere di essere presenti è una fatica che ripaga con la libertà. Inizia og
     date: '20 Aprile 2026',
     author: 'Mario Corallo',
     readTime: '6 min lettura',
+    category: 'Lifestyle',
     content: `
 Viviamo in un'ossessione per l'eredità digitale. Salviamo migliaia di foto che non guarderemo mai, archiviamo file per un futuro ipotetico, cerchiamo di rendere eterno ogni istante. Ma c'è una saggezza profonda in ciò che scompare.
 

@@ -95,6 +95,7 @@ export interface BlogPost {
   date: string;
   author: string;
   readTime: string;
+  category: string;
 }
 
 export interface UserHistory {
