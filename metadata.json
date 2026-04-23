@@ -1,6 +1,6 @@
 {
   "name": "Aura: Esercizi di Distaccamento",
-  "description": "Un'applicazione per praticare il distacco consapevole attraverso esercizi di decostruzione dell'impulso, creatività effimera e presenza mentale.",
+  "description": "Scopri Aura, l'app dedicata alla consapevolezza digitale e al benessere mentale. Attraverso esercizi di presenza, decostruzione dell'impulso e creatività, ti aiutiamo a disinnescare il pilota automatico.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "timer",

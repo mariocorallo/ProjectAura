@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Exercise, UserHistory, JournalEntry } from '../types';
 import { EXERCISES } from '../constants';
 import { trackPageView, trackEvent } from '../lib/analytics';
@@ -7,13 +8,13 @@ interface AuraContextType {
   history: UserHistory[];
   journal: JournalEntry[];
   selectedExercise: Exercise | null;
-  currentView: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter';
+  currentView: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter' | 'blog';
   searchQuery: string;
   activeCategory: string;
   isCelebrating: boolean;
   
   // Actions
-  setView: (view: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter') => void;
+  setView: (view: 'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter' | 'blog') => void;
   selectExercise: (exercise: Exercise | null) => void;
   setSearch: (query: string) => void;
   setCategory: (category: string) => void;
@@ -33,7 +34,14 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [history, setHistory] = useState<UserHistory[]>([]);
   const [journal, setJournal] = useState<JournalEntry[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'about' | 'bio' | 'suggestions' | 'support' | 'privacy' | 'cookie-policy' | 'newsletter'>('dashboard');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const currentView = useMemo(() => {
+    const path = location.pathname.split('/')[1] || 'dashboard';
+    return path as any;
+  }, [location.pathname]);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('tutti');
   const [isCelebrating, setIsCelebrating] = useState(false);
@@ -162,7 +170,10 @@ export const AuraProvider: React.FC<{ children: React.ReactNode }> = ({ children
       searchQuery,
       activeCategory,
       isCelebrating,
-      setView: setCurrentView,
+      setView: (view: any) => {
+        const path = view === 'dashboard' ? '/' : `/${view}`;
+        navigate(path);
+      },
       selectExercise: (exercise: Exercise | null) => {
         if (exercise) trackEvent('Exercise', 'Open', exercise.title);
         setSelectedExercise(exercise);

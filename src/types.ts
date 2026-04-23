@@ -1,4 +1,5 @@
 export type ExerciseId = 
+  | 'macro-osservazione'
   | 'digiuno-acquisto' 
   | 'alimentazione-single' 
   | 'produzione-creativa' 
@@ -74,7 +75,7 @@ export interface Exercise {
   objective: string;
   instructions: string[];
   icon: string;
-  category: 'consapevolezza' | 'creatività' | 'osservazione' | 'a pranzo' | 'ufficio' | 'spesa' | 'palestra' | 'auto';
+  category: 'consapevolezza' | 'creatività' | 'osservazione' | 'a pranzo' | 'ufficio' | 'spesa' | 'palestra' | 'auto' | 'everyday';
   timerSeconds?: number;
 }
 
@@ -84,6 +85,16 @@ export interface JournalEntry {
   timestamp: number;
   content: string;
   mood?: string;
+}
+
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  date: string;
+  author: string;
+  readTime: string;
 }
 
 export interface UserHistory {

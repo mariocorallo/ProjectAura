@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { AuraProvider, useAura } from './context/AuraContext';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Dashboard } from './pages/Dashboard';
 import { About } from './pages/About';
 import { Bio } from './pages/Bio';
 import { Suggestions } from './pages/Suggestions';
 import { Support } from './pages/Support';
 import { Legal } from './pages/Legal';
+import { Blog } from './pages/Blog';
 import { ExerciseDetail } from './components/ExerciseDetail';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
@@ -21,7 +23,6 @@ import { Exercise } from './types';
 
 function AppContent() {
   const { 
-    currentView, 
     selectedExercise, 
     selectExercise, 
     history, 
@@ -29,10 +30,14 @@ function AppContent() {
   } = useAura();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [currentView, selectedExercise]);
+    if (!location.pathname.startsWith('/blog')) {
+      document.title = 'Aura: Esercizi di Distaccamento';
+    }
+  }, [location.pathname, selectedExercise]);
 
   const recentExercises = history
     .sort((a, b) => b.lastAccessed - a.lastAccessed)
@@ -53,20 +58,23 @@ function AppContent() {
             <Navbar />
             
             <AnimatePresence mode="wait">
-              {currentView === 'dashboard' && (
-                <Dashboard 
-                  key="dashboard" 
-                  onOpenDrawer={() => setIsDrawerOpen(true)} 
-                  onOpenNotes={() => setIsNotesOpen(true)}
-                />
-              )}
-              {currentView === 'about' && <About key="about" />}
-              {currentView === 'bio' && <Bio key="bio" />}
-              {currentView === 'suggestions' && <Suggestions key="suggestions" />}
-              {currentView === 'support' && <Support key="support" />}
-              {currentView === 'newsletter' && <Newsletter key="newsletter" isView={true} />}
-              {currentView === 'privacy' && <Legal key="privacy" type="privacy" />}
-              {currentView === 'cookie-policy' && <Legal key="cookie" type="cookie" />}
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={
+                  <Dashboard 
+                    onOpenDrawer={() => setIsDrawerOpen(true)} 
+                    onOpenNotes={() => setIsNotesOpen(true)}
+                  />
+                } />
+                <Route path="/about" element={<About />} />
+                <Route path="/bio" element={<Bio />} />
+                <Route path="/suggestions" element={<Suggestions />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/newsletter" element={<Newsletter isView={true} />} />
+                <Route path="/privacy" element={<Legal type="privacy" />} />
+                <Route path="/cookie-policy" element={<Legal type="cookie" />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<Blog />} />
+              </Routes>
             </AnimatePresence>
 
             <Footer />
