@@ -15,7 +15,7 @@ export const EXERCISES: Exercise[] = [
       'Scatta una foto molto ravvicinata, cercando il massimo dettaglio.',
       'Osserva l’immagine per alcuni minuti, senza fretta.',
       'Nota texture, forme, imperfezioni, strutture che a occhio nudo non vedevi.',
-      'Se la mente interpreta o giudica, riportala al puro guardare.',
+      'Se vuoi prendi un quadernino per prendere appunti su sensazioni, idee, cose che non avevi mai visto o pensato ci fossero.',
       'Chiudi riconoscendo quanta complessità esiste in ciò che sembrava banale.'
     ]
   },
