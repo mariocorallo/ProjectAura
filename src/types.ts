@@ -1,4 +1,5 @@
 export type ExerciseId = 
+  | 'focus-visivo'
   | 'macro-osservazione'
   | 'digiuno-acquisto' 
   | 'alimentazione-single' 

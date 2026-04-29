@@ -2,6 +2,22 @@ import { Exercise } from './types';
 
 export const EXERCISES: Exercise[] = [
   {
+    id: 'focus-visivo',
+    title: 'Focus Visivo',
+    description: 'Rieducare l\'occhio a cogliere le micro-frazioni della realtà, uscendo dal rumore visivo digitale.',
+    objective: 'Sviluppare una percezione analitica e profonda della materia e dello spazio circostante.',
+    category: 'osservazione',
+    icon: 'Eye',
+    instructions: [
+      'Scegli un micro-dettaglio vicino a te: la venatura di un tavolo, un filo d\'erba o la trama di un tessuto.',
+      'Osservalo senza interruzioni per almeno 2 minuti, cercando di scoprire geometrie mai notate prima.',
+      'Analizza come la luce interagisce con la superficie, individuando ogni sfumatura di ombra e riflesso.',
+      'Sposta ora lo sguardo verso l\'oggetto più lontano che riesci a vedere, mantenendo la stessa intensità di osservazione.',
+      'Cerca di tracciare un filo immaginario che unisca il micro-dettaglio vicino al macro-dettaglio distante.',
+      'Rifletti su come la tua attenzione possa dilatare o restringere la realtà a tuo piacimento.'
+    ]
+  },
+  {
     id: 'macro-osservazione',
     title: 'Macro Osservazione',
     description: 'Dettaglio Invisibile. Allenare lo sguardo a cogliere la complessità nascosta nelle cose semplici.',

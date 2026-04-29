@@ -30,7 +30,7 @@ export const ExerciseCard = ({ exercise, onClick }: ExerciseCardProps) => {
   return (
     <motion.div
       whileHover={{ y: -4, scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.97 }}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -46,12 +46,14 @@ export const ExerciseCard = ({ exercise, onClick }: ExerciseCardProps) => {
         <div className="p-3 rounded-2xl bg-white shadow-sm transition-colors group-hover:bg-aura-accent group-hover:text-white text-aura-accent">
           <LucideIcon name={exercise.icon} size={24} />
         </div>
-        <button 
+        <motion.button 
+          whileHover={{ scale: 1.1, color: 'var(--aura-accent)' }}
+          whileTap={{ scale: 0.9 }}
           onClick={handleShare}
-          className="p-2 transition-colors hover:text-aura-accent text-aura-muted/40 z-10"
+          className="p-2 transition-colors text-aura-muted/40 z-10"
         >
           <Share2 size={16} />
-        </button>
+        </motion.button>
       </div>
       
       <span className="text-[10px] uppercase tracking-widest font-semibold text-aura-muted mb-2">
