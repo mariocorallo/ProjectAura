@@ -13,8 +13,8 @@ export const Navbar: React.FC = () => {
     { id: 'dashboard', label: 'Esercizi' },
     { id: 'about', label: "Cos'è Aura" },
     { id: 'bio', label: 'Chi sono' },
+    { id: 'blog', label: 'Blog' },
     { id: 'newsletter', label: 'Newsletter' },
-    { id: 'suggestions', label: 'Suggerimenti' },
     { id: 'support', label: 'Sostienici' },
   ] as const;
   const handleNav = (id: typeof menuItems[number]['id']) => {

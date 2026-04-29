@@ -2,6 +2,90 @@ import { BlogPost } from './types';
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'minimalismo-digitale-guida-pratica',
+    title: 'Minimalismo Digitale: Riprendi il Controllo della tua Vita Online',
+    excerpt: 'La tecnologia dovrebbe essere uno strumento, non un padrone. Scopri come applicare il minimalismo digitale alla tua quotidianità per ritrovare concentrazione e tempo.',
+    date: '29 Aprile 2026',
+    author: 'Mario Corallo',
+    readTime: '7 min lettura',
+    category: 'Minimalismo',
+    content: `
+Nell'ultimo decennio, abbiamo accolto nelle nostre vite una quantità di strumenti digitali senza mai chiederci: "A quale costo?". Il **Minimalismo Digitale** non è una crociata contro la tecnologia, ma una filosofia di utilizzo consapevole.
+
+## Fare spazio all'Essenziale
+
+Il cuore del minimalismo non è sottrarre, ma aggiungere valore. Se la tua home screen è piena di app che succhiano la tua attenzione senza restituire utilità, stai pagando con la tua risorsa più preziosa: il tempo.
+
+### Il Primo Passo: La Pulizia Radicale
+Prendi il tuo telefono. Elimina tutte le applicazioni che non hanno un'utilità specifica o che non ti danno una gioia genuina. Se un'app serve solo a "passare il tempo", è il momento di lasciarla andare.
+
+## 5 Pilastri per una Vita Digitale Leggera
+
+1.  **Notifiche Selettive:** Disattiva tutte le notifiche tranne quelle provenienti da esseri umani reali (messaggi diretti, chiamate). Le app non dovrebbero decidere quando devi guardare lo schermo.
+2.  **Home Screen Minimal:** Mantieni solo le 4-5 app di utilità fondamentale nella prima schermata. Nascondi il resto.
+3.  **Il Telefono non è una Sveglia:** Compra una sveglia analogica. Non lasciare che la prima cosa che vedi al mattino sia un feed di notizie o email.
+4.  **Zone Phone-Free:** Definisci aree della casa o momenti della giornata (come la cena) in cui il telefono è fisicamente in un'altra stanza.
+5.  **Qualità sopra Quantità:** Scegli poche fonti di informazione di alta qualità invece di scorrere infiniti aggregatori di notizie.
+
+In Aura, crediamo che la libertà inizi dove finisce la compulsione. Prova a svuotare il tuo spazio digitale oggi per riempire il tuo spazio mentale domani.
+    `
+  },
+  {
+    slug: 'potere-del-silenzio-digitale',
+    title: 'Il Potere del Silenzio: Perché Disconnettersi è il Vero Lusso Moderno',
+    excerpt: 'In un mondo che non smette mai di parlare, il silenzio è diventato una risorsa rara. Esploriamo i benefici neuro scientifici di una pausa digitale totale.',
+    date: '27 Aprile 2026',
+    author: 'Mario Corallo',
+    readTime: '5 min lettura',
+    category: 'Neuroscience',
+    content: `
+Il rumore non è solo acustico. Esiste un **rumore informativo** che satura i nostri sensi dal momento in cui ci svegliamo a quello in cui chiudiamo gli occhi. Questo costante bombardamento di stimoli impedisce al nostro cervello di attivare il cosiddetto *Default Mode Network*.
+
+## La Scienza della Pausa
+
+Quando non stiamo facendo nulla di specifico e non siamo stimolati da uno schermo, il nostro cervello inizia a elaborare informazioni, consolidare memorie e generare idee creative. È nel "vuoto" che nasce l'originalità.
+
+### Cortisolo e Display
+Ogni notifica attiva una piccola scarica di dopamina seguita da un aumento di cortisolo se non possiamo rispondere immediatamente. Siamo in uno stato di allerta costante. Il silenzio digitale è l'unico antidoto efficace.
+
+## Come Praticare il Silenzio Oggi
+
+Non hai bisogno di un ritiro in un monastero per provare i benefici della disconnessione. Puoi iniziare con piccoli "varchi di silenzio":
+
+*   **Il tragitto consapevole:** Prova a guidare o camminare verso il lavoro senza musica o podcast. Ascolta i suoni della città o il ritmo dei tuoi passi.
+*   **No-Tech Sunday:** Scegli un giorno a settimana (o mezza giornata) per spegnere completamente i tuoi dispositivi. Avvisa chi di dovere e sperimenta la sensazione di essere "irraggiungibile".
+*   **Osservazione Pura:** Siediti per 5 minuti senza fare nulla. Guarda fuori dalla finestra. Non meditare, non cercare di rilassarti. Semplicemente, resta in silenzio.
+
+Il silenzio non è assenza, ma presenza assoluta. Aura nasce per proteggere questi momenti di quiete, trasformandoli da eccezioni a abitudini.
+    `
+  },
+  {
+    slug: 'mindful-scrolling-presenza-social',
+    title: 'Mindful Scrolling: Come Navigare sui Social senza Perdere la Bussola',
+    excerpt: 'È possibile usare i social media senza finire nel vortice del doomscrolling? Ecco 5 strategie per trasformare il consumo passivo in ispirazione attiva.',
+    date: '25 Aprile 2026',
+    author: 'Mario Corallo',
+    readTime: '6 min lettura',
+    category: 'Awareness',
+    content: `
+Siamo onesti: i social media sono qui per restare. Demonizzarli non serve a nulla, ma imparare a cavalcarli senza farsi travolgere è la sfida del nostro tempo. Il **Mindful Scrolling** è l'arte di guardare uno schermo pur rimanendo radicati nel proprio corpo.
+
+## Il Meccanismo della Ricompensa Variabile
+
+I social sono progettati come slot machine. Non sai mai cosa troverai nello scroll successivo. Questa incertezza crea una dipendenza biochimica. La consapevolezza è l'unico interruttore che può spegnere questa macchina.
+
+### Strategie per lo Scrolling Consapevole
+
+1.  **L'Intenzione Prima del Clic:** Prima di aprire Instagram o TikTok, dichiara a te stesso ad alta voce: "Entro per 5 minuti per vedere gli aggiornamenti di X". Dare un obiettivo trasforma l'azione da compulsiva a intenzionale.
+2.  **Il Check-up del Corpo:** Mentre scorri, fai una scansione veloce. Le tue spalle sono contratte? Stai trattenendo il respiro? Se il tuo corpo è in tensione, chiudi l'app.
+3.  **Sanificazione del Feed:** Se segui account che ti fanno sentire inadeguato, arrabbiato o ansioso, smetti di seguirli oggi stesso. Il tuo feed deve essere un giardino di ispirazione, non un tribunale di confronto.
+4.  **Timer Fisici:** Non affidarti ai timer interni delle app. Usa un timer da cucina o quello del telefono (ma esterno all'app che stai usando) per ricordarti di uscire.
+5.  **Il Post-Scroll Check:** Dopo aver chiuso l'app, chiediti: "Come mi sento ora rispetto a prima?". Se ti senti più vuoto o stanco, prendi nota.
+
+La tecnologia di Aura ti aiuta a ricalibrare i sensi proprio perché tu possa tornare nel mondo digitale con una corazza di consapevolezza più forte.
+    `
+  },
+  {
     slug: 'disinnescare-pilota-automatico-consapevolezza-digitale',
     title: 'Disinnescare il Pilota Automatico: Guida alla Consapevolezza Digitale nell\'Era della Distrazione',
     excerpt: 'In un mondo che compete costantemente per la nostra attenzione, riscoprire la presenza è un atto di ribellione necessaria. Scopri come riprendere il comando della tua mente.',
