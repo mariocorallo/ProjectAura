@@ -72,14 +72,15 @@ export const Dashboard: React.FC<{
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="max-w-7xl mx-auto"
     >
       {/* Header */}
       <header 
-        className={`transition-all duration-700 ease-in-out text-center max-w-2xl mx-auto ${
+        className={`transition-all duration-1000 ease-in-out text-center max-w-2xl mx-auto ${
           searchQuery ? 'mb-6 scale-90 opacity-40' : 'mb-20'
         }`}
       >
@@ -87,10 +88,10 @@ export const Dashboard: React.FC<{
           {!searchQuery ? (
             <motion.div
               key="full-header"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <h1 className="serif text-5xl md:text-7xl font-bold mb-8 italic tracking-tight text-aura-ink">
                 Aura
@@ -100,21 +101,27 @@ export const Dashboard: React.FC<{
                 Aura è un insieme di piccoli esercizi quotidiani per spezzare la compulsione digitale e riprendere il comando della tua attenzione.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <button 
+                <motion.button 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
                   onClick={() => { trackClick('Dashboard', 'Open Drawer'); onOpenDrawer(); }}
                   className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
                 >
                   <Sparkles size={16} className="text-aura-accent group-hover:scale-110 transition-transform" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-aura-muted group-hover:text-aura-accent">Scopri Consigli & Storia</span>
-                </button>
+                </motion.button>
 
-                <button 
+                <motion.button 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
                   onClick={handleOpenNotes}
                   className="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl bg-white border border-white shadow-sm hover:border-aura-accent/20 hover:bg-aura-accent/5 transition-all group"
                 >
                   <HistoryIcon size={16} className="text-aura-accent group-hover:rotate-12 transition-transform" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-aura-muted group-hover:text-aura-accent">Le tue note</span>
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           ) : (
@@ -133,7 +140,12 @@ export const Dashboard: React.FC<{
       </header>
 
       {/* Search Bar */}
-      <div className="max-w-2xl mx-auto w-full mb-12">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.8 }}
+        className="max-w-2xl mx-auto w-full mb-12"
+      >
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
             <Search size={18} className="text-aura-muted group-focus-within:text-aura-accent transition-colors" />
@@ -154,14 +166,22 @@ export const Dashboard: React.FC<{
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Filters */}
-      <div className="flex flex-col items-center justify-center gap-6 mb-12">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 1 }}
+        className="flex flex-col items-center justify-center gap-6 mb-12"
+      >
         <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl">
-          {categories.map((cat) => (
-            <button
+          {categories.map((cat, idx) => (
+            <motion.button
               key={cat.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 + (idx * 0.05) }}
               onClick={() => handleCategory(cat.id)}
               className={`px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border flex items-center gap-2 ${
                 activeCategory === cat.id
@@ -171,10 +191,10 @@ export const Dashboard: React.FC<{
             >
               <cat.icon size={14} className={activeCategory === cat.id ? 'text-white' : 'text-aura-accent/60'} />
               {cat.label}
-            </button>
+            </motion.button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Grid */}
       <AnimatePresence mode="popLayout">

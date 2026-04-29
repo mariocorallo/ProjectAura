@@ -79,13 +79,20 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+      className="max-w-4xl mx-auto px-6 py-12"
+    >
       <div className="flex items-center justify-between mb-12">
         {renderBackButton()}
 
         <motion.button
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
           onClick={handleShare}
           className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white border border-white hover:border-aura-accent/20 hover:bg-aura-accent/5 text-aura-muted hover:text-aura-accent transition-all group"
         >
@@ -96,9 +103,9 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
 
       <div className="grid md:grid-cols-2 gap-12 items-start mb-20">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, type: "spring", damping: 25, stiffness: 100 }}
         >
           <div className="p-4 rounded-3xl bg-aura-accent/10 text-aura-accent w-fit mb-6">
             <LucideIcon name={exercise.icon} size={32} />
@@ -109,16 +116,25 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
           </h1>
           
           <div className="space-y-8">
-            <section>
+            <motion.section
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
               <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-aura-muted mb-3 italic">
                 Obiettivo Di Distaccamento
               </h2>
               <p className="text-lg text-aura-ink/80 leading-relaxed font-medium">
                 {exercise.objective}
               </p>
-            </section>
+            </motion.section>
 
-            <section className="bg-white/40 p-8 rounded-[40px] border border-white">
+            <motion.section 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="bg-white/40 p-8 rounded-[40px] border border-white"
+            >
               <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-aura-muted mb-6">
                 Guida Pratica
               </h2>
@@ -132,23 +148,23 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
                   </li>
                 ))}
               </ul>
-            </section>
+            </motion.section>
           </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.8 }}
           className="flex flex-col items-center justify-center p-8 rounded-[48px] bg-gradient-to-b from-white to-transparent shadow-xl shadow-aura-accent/5 border border-white min-h-[500px]"
         >
           <AnimatePresence mode="wait">
             {!isSessionActive && !showReflection ? (
               <motion.div 
                 key="start"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 className="text-center space-y-8 max-w-xs"
               >
                 <div className="w-24 h-24 bg-aura-accent/5 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -206,12 +222,15 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
                   >
                     <div className="w-16 h-16 rounded-full bg-aura-accent/20 blur-md" />
                   </motion.div>
+                  
+                  {/* Immersive Audio Hint */}
                   <motion.p 
-                    animate={{ opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="mt-12 text-sm italic serif text-aura-muted"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+                    className="absolute -bottom-16 text-[10px] uppercase tracking-widest font-bold text-aura-accent/60 whitespace-nowrap"
                   >
-                    Resta nel flusso...
+                    Usa i suoni ambientali per restare nel flusso ↓
                   </motion.p>
                 </div>
 
@@ -267,6 +286,6 @@ export const ExerciseDetail = ({ exercise, onBack, onComplete }: ExerciseDetailP
           {renderBackButton()}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

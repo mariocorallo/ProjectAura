@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { AuraProvider, useAura } from './context/AuraContext';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Dashboard } from './pages/Dashboard';
@@ -55,10 +55,17 @@ function AppContent() {
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-aura-bg selection:bg-aura-accent/20">
+    <div className="min-h-screen bg-aura-bg selection:bg-aura-accent/20 flex flex-col">
       <AnimatePresence mode="wait">
         {!selectedExercise ? (
-          <div key="main-shell" className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+          <motion.div 
+            key="main-shell" 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="flex-1 max-w-7xl mx-auto w-full px-6 py-12 md:py-16"
+          >
             <Navbar />
             
             <AnimatePresence mode="wait">
@@ -82,15 +89,21 @@ function AppContent() {
             </AnimatePresence>
 
             <Footer />
-          </div>
+          </motion.div>
         ) : (
-          <div key="detail-shell">
+          <motion.div 
+            key="detail-shell"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
             <ExerciseDetail 
               exercise={selectedExercise} 
               onBack={() => selectExercise(null)} 
               onComplete={(id) => completeExercise(id)}
             />
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
