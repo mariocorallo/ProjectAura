@@ -3,6 +3,8 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import { Resend } from 'resend';
 import dotenv from 'dotenv';
+import { EXERCISES } from './src/constants';
+import { BLOG_POSTS } from './src/blogData';
 
 dotenv.config();
 
@@ -121,6 +123,57 @@ async function startServer() {
       console.error("Brevo Server Exception:", err);
       res.status(500).json({ error: "Errore interno del server" });
     }
+  });
+
+  // Robots.txt
+  app.get("/robots.txt", (req, res) => {
+    const host = req.get('host') || 'progettoaura.xyz';
+    const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
+    const baseUrl = `${protocol}://${host}`;
+    
+    res.type('text/plain');
+    res.send(`User-agent: *
+Allow: /
+
+Sitemap: ${baseUrl}/sitemap.xml`);
+  });
+
+  // Dynamic Sitemap
+  app.get("/sitemap.xml", (req, res) => {
+    const host = req.get('host') || 'progettoaura.xyz';
+    const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
+    const baseUrl = `${protocol}://${host}`;
+
+    const staticPages = [
+      '',
+      '/blog',
+      '/about',
+      '/bio',
+      '/suggestions',
+      '/support',
+      '/privacy',
+      '/cookie-policy',
+      '/newsletter'
+    ];
+
+    const exercisePages = EXERCISES.map(ex => `/esercizio/${ex.id}`);
+    const blogPages = BLOG_POSTS.map(post => `/blog/${post.slug}`);
+
+    const allPages = [...staticPages, ...exercisePages, ...blogPages];
+
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${allPages.map(page => `
+  <url>
+    <loc>${baseUrl}${page}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>${page === '' ? 'daily' : 'weekly'}</changefreq>
+    <priority>${page === '' ? '1.0' : (page.startsWith('/blog/') || page.startsWith('/esercizio/') ? '0.8' : '0.5')}</priority>
+  </url>`).join('')}
+</urlset>`;
+
+    res.header('Content-Type', 'application/xml');
+    res.send(sitemap);
   });
 
   // Vite middleware for development
